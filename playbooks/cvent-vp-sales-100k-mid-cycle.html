@@ -275,7 +275,12 @@
   }
   .offer-header {
     background: var(--nav-bg); padding: 20px 26px;
-    display: flex; align-items: center; gap: 12px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .offer-header > div:nth-child(2) { flex: 1; min-width: 0; }
+  @media (max-width: 600px) {
+    .offer-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .offer-header-btn { align-self: stretch; text-align: center; }
   }
   .offer-logo-mark {
     width: 32px; height: 32px; border-radius: 7px;
@@ -589,7 +594,7 @@
       </div>
       <div>
         <div class="offer-header-name">LaunchNotes</div>
-        <div class="offer-header-sub">The product communications platform for software teams - release notes, announcements, and updates across email, Slack, and Teams.</div>
+        <div class="offer-header-sub">Product communications across email, Slack, and Teams.</div>
       </div>
       
       <a class="offer-header-btn" href="https://launchnotes.com/demo">Book 30 min with Jack →</a>
@@ -791,7 +796,7 @@
       </div>
       <div>
         <div class="offer-header-name">LaunchNotes</div>
-        <div class="offer-header-sub">The product communications platform for software teams - release notes, announcements, and updates across email, Slack, and Teams.</div>
+        <div class="offer-header-sub">Product communications across email, Slack, and Teams.</div>
       </div>
       
     </div>
