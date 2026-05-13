@@ -275,12 +275,13 @@
   }
   .offer-header {
     background: var(--nav-bg); padding: 20px 26px;
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 14px;
   }
   .offer-header > div:nth-child(2) { flex: 1; min-width: 0; }
-  @media (max-width: 600px) {
-    .offer-header { flex-direction: column; align-items: flex-start; gap: 14px; }
-    .offer-header-btn { align-self: stretch; text-align: center; }
+  .offer-header-btn { flex-shrink: 0; white-space: nowrap; }
+  @media (max-width: 480px) {
+    .offer-header { gap: 10px; padding: 16px 18px; }
+    .offer-header-btn { padding: 9px 14px; font-size: 12px; }
   }
   .offer-logo-mark {
     width: 32px; height: 32px; border-radius: 7px;
