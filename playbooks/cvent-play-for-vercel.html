@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>The Cvent Play, Built for Vercel — Vercel</title>
+<meta property="og:title" content="The Cvent Play, Built for Vercel — Vercel">
+<meta property="og:description" content="How a $100K mid-cycle close maps to Vercel&#39;s sales motion - your reps walking developers and engineering leaders through your published roadmap mid-deal.">
+<style>
+  :root {
+    --bg: #F6F6FC;
+    --surface: #FFFFFF;
+    --surface-2: #F6F6FC;
+    --border: #E5E5F5;
+    --border-2: #E5E5F5;
+    --text: #202030;
+    --text-muted: #64748B;
+    --text-dim: #64748B;
+    --nav-bg: #202030;
+    --nav-text: rgba(255,255,255,0.62);
+    --accent: #2424A8;
+    --accent-light: #2424A8;
+    --accent-bright: #2424A8;
+    --accent-bg: #DEDEF2;
+    --accent-border: #DEDEF2;
+    --red-bg: rgba(239,68,68,0.06);
+    --red-border: rgba(239,68,68,0.22);
+    --green-bg: #DEDEF2;
+    --green-border: #DEDEF2;
+    --radius: 6px;
+    --radius-lg: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.07);
+    --font-serif: 'Iowan Old Style', 'Georgia', 'Times New Roman', serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.8;
+    padding-bottom: 72px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  .nav {
+    background: var(--nav-bg);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo-mark {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo-mark img { width: 100%; height: 100%; object-fit: cover; }
+  .nav-logo-mark .initials { color: #fff; font-family: var(--font-sans); font-weight: 800; font-size: 12px; letter-spacing: -0.01em; }
+  .nav-logo-name {
+    font-family: var(--font-sans);
+    font-size: 15px; font-weight: 700;
+    color: #fff; letter-spacing: -0.01em;
+  }
+  .nav-meta { font-family: var(--font-sans); font-size: 13px; color: var(--nav-text); }
+  .nav-cta {
+    font-family: var(--font-sans);
+    font-size: 13px; font-weight: 700;
+    padding: 8px 18px;
+    background: var(--accent-bright);
+    color: #fff; border-radius: var(--radius);
+    text-decoration: none; transition: filter 0.15s;
+  }
+  .nav-cta:hover { filter: brightness(1.1); }
+
+  /* READING BAR */
+  .reading-bar {
+    position: fixed; top: 56px; left: 0;
+    height: 2px; background: var(--accent-bright);
+    z-index: 200; width: 0%; transition: width 0.1s;
+  }
+
+  /* HERO */
+  .hero { max-width: 740px; margin: 0 auto; padding: 64px 40px 0; }
+  .hero-category {
+    font-family: var(--font-sans);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 18px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-category::before {
+    content: ''; display: inline-block;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent-bright);
+  }
+  .hero-prepared {
+    font-family: var(--font-sans);
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: 999px;
+    padding: 6px 14px; margin-bottom: 22px;
+  }
+  .hero-prepared::before {
+    content: ''; display: inline-block;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-bright);
+  }
+  .hero-prepared strong { color: var(--accent); font-weight: 800; }
+  .hero h1 {
+    font-size: 38px; font-weight: 700;
+    line-height: 1.15; letter-spacing: -0.02em;
+    color: var(--text); margin-bottom: 18px;
+  }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero-lede {
+    font-size: 19px; color: var(--text-muted);
+    line-height: 1.65; margin-bottom: 24px; font-style: italic;
+  }
+  .hero-meta {
+    font-family: var(--font-sans);
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    font-size: 13px; color: var(--text-dim);
+    padding-bottom: 28px; border-bottom: 1px solid var(--border);
+  }
+  .hero-meta-dot { width: 3px; height: 3px; background: var(--border-2); border-radius: 50%; }
+
+  /* ARTICLE */
+  .article { max-width: 740px; margin: 0 auto; padding: 0 40px 80px; }
+  .article > * + * { margin-top: 22px; }
+  .article p { margin: 0 0 22px; }
+  .article p:last-child { margin-bottom: 0; }
+  .article h2 {
+    font-family: var(--font-sans);
+    font-size: 22px; font-weight: 800; letter-spacing: -0.02em;
+    color: var(--text); margin: 52px 0 14px;
+  }
+  .article h3 {
+    font-family: var(--font-sans);
+    font-size: 17px; font-weight: 700;
+    color: var(--text); margin: 34px 0 10px;
+  }
+  .article h3 .num { color: var(--accent); margin-right: 4px; }
+  .article hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+  .article em { font-style: italic; color: var(--text-muted); }
+  .article strong { font-weight: 700; color: var(--text); }
+
+  /* PULL QUOTE */
+  .pull-quote {
+    border-left: 3px solid var(--accent-bright);
+    margin: 32px 0; padding: 8px 0 8px 26px;
+    font-size: 20px; font-style: italic;
+    color: var(--text-muted); line-height: 1.6;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: var(--radius-lg);
+    padding: 18px 22px; margin: 28px 0;
+    font-family: var(--font-sans);
+    font-size: 14px; line-height: 1.65; color: var(--text-muted);
+  }
+  .callout-label {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 7px;
+  }
+
+  /* VS GRID (old vs new) */
+  .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 26px 0; font-family: var(--font-sans); }
+  @media(max-width:600px) { .vs-grid { grid-template-columns: 1fr; } }
+  .vs-col { padding: 18px 20px; border-radius: var(--radius-lg); }
+  .vs-old { background: var(--red-bg); border: 1px solid var(--red-border); }
+  .vs-new { background: var(--green-bg); border: 1px solid var(--green-border); }
+  .vs-label { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  .vs-old .vs-label { color: #DC2626; }
+  .vs-new .vs-label { color: var(--accent); }
+  .vs-item { font-size: 13px; color: var(--text-muted); margin-bottom: 5px; line-height: 1.5; display: flex; gap: 7px; }
+
+  /* CAPABILITIES GRID */
+  .capabilities { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 26px 0 32px; font-family: var(--font-sans); }
+  @media(max-width:600px) { .capabilities { grid-template-columns: 1fr; } }
+  .cap-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 16px 18px;
+    box-shadow: var(--shadow); border-top: 2px solid var(--accent-bright);
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+    animation-delay: calc(0.05s + var(--idx, 0) * 0.07s);
+    transition: transform 0.2s, box-shadow 0.2s, border-top-width 0.2s;
+  }
+  .cap-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-top-width: 4px; }
+  .cap-label { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .cap-value { font-size: 22px; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; margin: 4px 0 4px; letter-spacing: -0.01em; }
+  .cap-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  /* EXAMPLE / FINDING BLOCK */
+  .example-block {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 22px 26px; margin: 26px 0;
+    font-family: var(--font-sans); box-shadow: var(--shadow);
+    transition: box-shadow 0.25s, border-color 0.25s;
+  }
+  .example-block:hover { box-shadow: var(--shadow-md); border-color: var(--accent-border); }
+  .example-block h4 { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 10px; letter-spacing: -0.01em; }
+  .example-block p { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
+  .example-block .evidence {
+    background: var(--surface-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 10px 14px; margin: 10px 0;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 12.5px; color: var(--text-muted); line-height: 1.5;
+  }
+  .example-block .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+
+  /* PILL / BADGE */
+  .pill {
+    font-family: var(--font-sans);
+    display: inline-block; padding: 3px 9px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+    background: var(--accent-bg); color: var(--accent);
+    text-transform: uppercase;
+  }
+  .pill.danger { background: rgba(239,68,68,0.1); color: #DC2626; }
+  .pill.warning { background: rgba(245,158,11,0.14); color: #B45309; }
+  .pill.success { background: var(--green-bg); color: var(--accent); }
+
+  /* OFFER / CTA BLOCK */
+  .offer {
+    margin: 60px 0 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow-md);
+    font-family: var(--font-sans);
+  }
+  .offer-top {
+    margin: 32px 0 56px;
+    border: 2px solid var(--accent);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  }
+  .offer-header-btn {
+    margin-left: auto;
+    padding: 9px 18px;
+    background: var(--accent-bright); color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    border-radius: var(--radius); text-decoration: none;
+    white-space: nowrap;
+    transition: filter 0.15s;
+  }
+  .offer-header-btn:hover { filter: brightness(1.1); }
+  .offer-scroll-hint {
+    font-size: 12px !important;
+    color: var(--text-dim) !important;
+    font-style: italic;
+    margin: 14px 0 0 !important;
+  }
+  .offer-header {
+    background: var(--nav-bg); padding: 20px 26px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .offer-logo-mark {
+    width: 32px; height: 32px; border-radius: 7px;
+    overflow: hidden; flex-shrink: 0;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .offer-logo-mark img { width: 100%; height: 100%; object-fit: cover; }
+  .offer-logo-mark .initials { color: #fff; font-weight: 800; font-size: 13px; }
+  .offer-header-name { font-size: 16px; font-weight: 700; color: #fff; }
+  .offer-header-sub { font-size: 12px; color: var(--nav-text); margin-top: 1px; }
+  .offer-body { padding: 24px 26px; }
+  .offer-body h3 { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; letter-spacing: -0.01em; }
+  .offer-body p { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; }
+  .offer-btn {
+    padding: 13px 26px; background: var(--accent-bright);
+    color: #fff; font-size: 13px; font-weight: 700;
+    border-radius: var(--radius); text-decoration: none;
+    display: inline-block;
+    transition: transform 0.15s, filter 0.15s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .offer-btn:hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+  .offer-btn:active { transform: translateY(0); }
+  .offer-top .offer-btn { animation: ctaPulse 2.4s ease-in-out 1s 2; }
+
+  /* TABLES */
+  .article table {
+    width: 100%; border-collapse: collapse; margin: 22px 0;
+    font-family: var(--font-sans); font-size: 13.5px;
+  }
+  .article th, .article td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .article th { font-weight: 700; color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .article tbody tr:hover { background: var(--surface-2); }
+
+  /* FORM INPUTS (calculator / rubric) */
+  .article input, .article select, .article textarea {
+    font-family: var(--font-sans); font-size: 14px;
+    padding: 9px 12px; border: 1px solid var(--border);
+    border-radius: var(--radius); background: var(--surface);
+    color: var(--text); width: 100%;
+  }
+  .article input:focus, .article select:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+  .article label { font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); display: block; margin-bottom: 6px; font-weight: 600; }
+
+  /* FOOTER */
+  .footer {
+    max-width: 740px; margin: 64px auto 0; padding: 24px 40px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-sans); font-size: 12px;
+    color: var(--text-dim);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+
+  /* TOC for reference archetype */
+  .toc {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 22px;
+    margin: 26px 0;
+    font-family: var(--font-sans);
+  }
+  .toc-label { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+  .toc a { display: block; padding: 6px 0; color: var(--text); text-decoration: none; font-size: 14px; border-bottom: 1px dashed var(--border); }
+  .toc a:last-child { border-bottom: none; }
+  .toc a:hover { color: var(--accent); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes barGrow { from { width: 0; } to { width: var(--target-w); } }
+  @keyframes flexGrow { from { flex: 0; } to { flex: var(--target-flex); } }
+  @keyframes donutDraw { from { stroke-dasharray: 0 100; } }
+  @keyframes ringDraw { from { stroke-dasharray: 0 100; } }
+  @keyframes ctaPulse { 0%, 100% { box-shadow: 0 0 0 0 var(--accent-bg); } 50% { box-shadow: 0 0 0 10px transparent; } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  /* STAT STRIP */
+  .stat-strip {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0; margin: 32px 0; font-family: var(--font-sans);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .stat-strip-item {
+    padding: 18px 12px;
+    border-right: 1px solid var(--border);
+    opacity: 0;
+    animation: fadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: calc(var(--idx, 0) * 0.08s);
+    transition: background 0.2s;
+  }
+  .stat-strip-item:hover { background: var(--surface-2); }
+  .stat-strip-item:last-child { border-right: none; }
+  .stat-strip-item .num { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1.1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .stat-strip-item .num .unit { font-size: 16px; color: var(--text-muted); font-weight: 600; margin-left: 2px; }
+  .stat-strip-item .lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; font-weight: 700; }
+  .stat-strip-item .note { font-size: 12px; color: var(--text-dim); margin-top: 3px; line-height: 1.4; }
+
+  /* CHART BLOCKS */
+  .chart-block {
+    margin: 30px 0; font-family: var(--font-sans);
+    padding: 22px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.25s, border-color 0.25s;
+  }
+  .chart-block:hover { box-shadow: var(--shadow-md); border-color: var(--accent-border); }
+  .chart-title { font-size: 11px; font-weight: 800; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .chart-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+
+  /* HORIZONTAL BAR CHART */
+  .chart-bars { display: grid; gap: 4px; }
+  .chart-bar-row {
+    display: grid; grid-template-columns: 150px 1fr 80px;
+    gap: 14px; align-items: center; padding: 6px 0; font-size: 13px;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+  .chart-bar-row:hover { background: var(--surface-2); }
+  .chart-bar-row .name { color: var(--text-muted); font-weight: 600; }
+  .chart-bar-row .bar-track {
+    background: var(--surface-2); border-radius: 6px; height: 24px;
+    position: relative; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .chart-bar-row .bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+    border-radius: 5px; width: 0;
+    animation: barGrow 1.1s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+    animation-delay: calc(0.15s + var(--idx, 0) * 0.06s);
+    transition: filter 0.2s;
+  }
+  .chart-bar-row:hover .bar-fill { filter: brightness(1.08); }
+  .chart-bar-row .val { font-weight: 800; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+  .chart-bar-row.alt .bar-fill { background: linear-gradient(90deg, var(--text-muted), var(--text-dim)); opacity: 0.75; }
+  .chart-bar-row.alt .val { color: var(--text-muted); }
+
+  /* GROUPED STACKED BARS */
+  .chart-grouped { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .chart-grouped-bar {
+    display: grid; grid-template-columns: 80px 1fr 50px; gap: 12px;
+    align-items: center; font-size: 12.5px;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+    animation-delay: calc(0.1s + var(--idx, 0) * 0.1s);
+  }
+  .chart-grouped-bar .gname { color: var(--text-muted); font-weight: 700; }
+  .chart-grouped-bar .gsegs {
+    display: flex; gap: 3px; height: 32px;
+    background: var(--surface-2); border-radius: 5px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .chart-grouped-bar .gseg {
+    height: 100%; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 11px; font-weight: 700; min-width: 0;
+    transition: filter 0.2s;
+    cursor: default;
+  }
+  .chart-grouped-bar .gseg:hover { filter: brightness(1.1); }
+  .chart-grouped-bar .gtotal { font-weight: 800; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+  .chart-grouped-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border); font-size: 12px; color: var(--text-muted); }
+  .gleg-item { display: flex; align-items: center; gap: 6px; }
+  .gleg-swatch { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* DONUT CHART */
+  .donut-row { display: grid; grid-template-columns: 220px 1fr; gap: 28px; align-items: center; }
+  @media(max-width:600px) { .donut-row { grid-template-columns: 1fr; justify-items: center; } }
+  .donut-svg { animation: fadeUp 0.6s ease forwards; }
+  .donut-slice {
+    transition: stroke-width 0.2s ease, filter 0.2s ease;
+    cursor: default;
+    animation: donutDraw 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .donut-slice:hover { stroke-width: 4.4; filter: brightness(1.12); }
+  .donut-total, .donut-label { animation: fadeUp 0.8s ease forwards; animation-delay: 0.6s; opacity: 0; }
+  .donut-legend { font-size: 13px; }
+  .donut-legend-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 4px; border-bottom: 1px dashed var(--border);
+    opacity: 0;
+    animation: fadeUp 0.4s ease forwards;
+    animation-delay: calc(0.3s + var(--idx, 0) * 0.08s);
+    transition: background 0.2s;
+    border-radius: 4px;
+  }
+  .donut-legend-item:hover { background: var(--surface-2); padding-left: 8px; }
+  .donut-legend-item:last-child { border-bottom: none; }
+  .donut-legend-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .donut-legend-name { flex: 1; color: var(--text-muted); font-size: 13px; line-height: 1.4; }
+  .donut-legend-val { font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .donut-legend-pct { font-weight: 600; color: var(--text-dim); font-size: 11.5px; margin-left: 4px; }
+
+  /* PROGRESS RING (rubric composite score) */
+  .progress-ring-wrap { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; font-family: var(--font-sans); }
+  .ring-svg { animation: fadeUp 0.6s ease forwards; }
+  .ring-slice { animation: ringDraw 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+  .ring-label { font-size: 14px; font-weight: 700; color: var(--text); margin-top: 8px; }
+  .ring-sublabel { font-size: 12px; color: var(--text-muted); }
+
+  /* FLOW DIAGRAM (vertical stack — readable on desktop and mobile) */
+  .flow { display: flex; flex-direction: column; gap: 36px; margin: 30px 0; font-family: var(--font-sans); }
+  .flow-step {
+    padding: 22px 24px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); position: relative;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+    animation-delay: calc(0.1s + var(--idx, 0) * 0.12s);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .flow-step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    border-color: var(--accent);
+  }
+  .flow-step + .flow-step::before {
+    content: '↓'; position: absolute; left: 50%; top: -28px; transform: translateX(-50%);
+    color: var(--accent); font-size: 20px; font-weight: 800;
+  }
+  .flow-step .flow-num { font-size: 11px; font-weight: 800; color: var(--accent); letter-spacing: 0.14em; text-transform: uppercase; }
+  .flow-step .flow-name { font-size: 17px; font-weight: 800; color: var(--text); margin: 8px 0 8px; letter-spacing: -0.01em; }
+  .flow-step .flow-desc { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; }
+
+  /* DROP CAP for first paragraph if requested */
+  .drop-cap::first-letter {
+    float: left; font-size: 64px; line-height: 0.85; font-weight: 800;
+    color: var(--accent); padding: 6px 12px 0 0; font-family: var(--font-serif);
+  }
+
+  /* HERO IMAGE */
+  .hero-image { margin: 22px -40px 0; }
+  .hero-image img { width: 100%; height: auto; border-radius: var(--radius-lg); }
+  @media(max-width:640px) { .hero-image { margin: 22px -24px 0; } }
+
+  /* PHASE TIMELINE (playbook) */
+  .timeline { position: relative; padding-left: 28px; border-left: 2px solid var(--border); margin: 26px 0; font-family: var(--font-sans); }
+  .phase { position: relative; padding: 0 0 32px; }
+  .phase::before {
+    content: ''; position: absolute; left: -37px; top: 4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--accent-bright); border: 3px solid var(--bg);
+  }
+  .phase-head { display: flex; gap: 10px; align-items: baseline; margin-bottom: 6px; flex-wrap: wrap; }
+  .phase-name { font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: -0.01em; }
+  .phase-summary { color: var(--text-muted); font-size: 14px; margin-bottom: 12px; line-height: 1.6; }
+  .phase-section-label { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin: 14px 0 6px; }
+  .phase ul { padding-left: 20px; }
+  .phase li { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 4px; }
+  .phase-gate { margin-top: 14px; padding: 10px 14px; background: var(--surface-2); border-left: 3px solid var(--accent); border-radius: 4px; font-size: 13.5px; color: var(--text-muted); }
+
+  @media (max-width: 640px) {
+    .hero { padding: 40px 24px 0; }
+    .article { padding: 0 24px 60px; }
+    .hero h1 { font-size: 28px; }
+    .article h2 { font-size: 19px; margin-top: 36px; }
+    .nav { padding: 0 16px; }
+    .nav-cta { padding: 7px 14px; font-size: 12px; }
+    body { font-size: 17px; }
+  }
+  @media print {
+    .nav, .reading-bar { display: none; }
+    body { background: #fff; }
+  }
+  
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" href="https://launchnotes.com">
+    <div class="nav-logo-mark">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAEvmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgZXhpZjpQaXhlbFhEaW1lbnNpb249IjI1NiIKICAgZXhpZjpQaXhlbFlEaW1lbnNpb249IjI1NiIKICAgZXhpZjpDb2xvclNwYWNlPSIxIgogICB0aWZmOkltYWdlV2lkdGg9IjI1NiIKICAgdGlmZjpJbWFnZUxlbmd0aD0iMjU2IgogICB0aWZmOlJlc29sdXRpb25Vbml0PSIyIgogICB0aWZmOlhSZXNvbHV0aW9uPSI3Mi4wIgogICB0aWZmOllSZXNvbHV0aW9uPSI3Mi4wIgogICBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIgogICBwaG90b3Nob3A6SUNDUHJvZmlsZT0ic1JHQiBJRUM2MTk2Ni0yLjEiCiAgIHhtcDpNb2RpZnlEYXRlPSIyMDE5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" alt="">
+      
+    </div>
+    <div class="nav-logo-name">LaunchNotes</div>
+  </a>
+  <a class="nav-cta" href="https://launchnotes.com/demo">Book 30 min with Jack</a>
+</nav>
+<div class="reading-bar" id="readingBar"></div>
+
+<header class="hero">
+  
+  <div class="hero-prepared">Prepared for <strong>Roniesha</strong> at <strong>Vercel</strong></div>
+  
+  <h1>The Cvent Play, Built for Vercel</h1>
+  <p class="hero-lede">How a $100K mid-cycle close maps to Vercel&#39;s sales motion - your reps walking developers and engineering leaders through your published roadmap mid-deal.</p>
+  <div class="hero-meta">
+    <span>Playbook</span>
+    <span class="hero-meta-dot"></span><span>Developer Tools / Frontend Cloud</span>
+    <span class="hero-meta-dot"></span><span>May 2026</span>
+    <span class="hero-meta-dot"></span>
+    <span>By LaunchNotes</span>
+  </div>
+</header>
+
+
+
+<main class="article">
+  
+  
+  <div class="offer offer-top">
+    <div class="offer-header">
+      <div class="offer-logo-mark">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAEvmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgZXhpZjpQaXhlbFhEaW1lbnNpb249IjI1NiIKICAgZXhpZjpQaXhlbFlEaW1lbnNpb249IjI1NiIKICAgZXhpZjpDb2xvclNwYWNlPSIxIgogICB0aWZmOkltYWdlV2lkdGg9IjI1NiIKICAgdGlmZjpJbWFnZUxlbmd0aD0iMjU2IgogICB0aWZmOlJlc29sdXRpb25Vbml0PSIyIgogICB0aWZmOlhSZXNvbHV0aW9uPSI3Mi4wIgogICB0aWZmOllSZXNvbHV0aW9uPSI3Mi4wIgogICBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIgogICBwaG90b3Nob3A6SUNDUHJvZmlsZT0ic1JHQiBJRUM2MTk2Ni0yLjEiCiAgIHhtcDpNb2RpZnlEYXRlPSIyMDE5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" alt="">
+        
+      </div>
+      <div>
+        <div class="offer-header-name">LaunchNotes</div>
+        <div class="offer-header-sub">The product communications platform for software teams - release notes, announcements, and updates across email, Slack, and Teams.</div>
+      </div>
+      
+      <a class="offer-header-btn" href="https://launchnotes.com/demo">Book 30 min with Jack →</a>
+      
+    </div>
+    <div class="offer-body">
+      <h3>Roniesha, want to see what this looks like for the Vercel team?</h3>
+      <p>30 min - we&#39;ll walk through which Vercel roadmap pages your AEs would build, how your existing PMM and Slack workflow folds in (or doesn&#39;t), and which next Pro-to-Enterprise deal could move with the play above. Bring this page; we&#39;ll mark the spots that don&#39;t fit yet.</p>
+      <a class="offer-btn" href="https://launchnotes.com/demo">Book 30 min with Jack</a>
+      
+      <p class="offer-scroll-hint">Then keep reading — the full breakdown is below.</p>
+      
+    </div>
+  </div>
+
+  
+
+  
+
+
+<p>Vercel ships fast. Your customers expect that pace - your reps need to match it in the deal moment. Cvent&#39;s VP Enterprise Sales closed a $100K ARR deal mid-cycle by handing his rep the published product roadmap and walking the customer through it on a live call. The play translates directly to Vercel&#39;s motion. Here&#39;s how the 4 steps map for your AEs selling Pro and Enterprise upgrades to engineering teams and dev-tools buyers.</p>
+
+
+
+
+<div class="stat-strip">
+  
+  <div class="stat-strip-item" style="--idx: 0;">
+    <div class="num">$100K</div>
+    <div class="lbl">Cvent ARR closed</div>
+    <div class="note">single deal, mid-cycle</div>
+  </div>
+  
+  <div class="stat-strip-item" style="--idx: 1;">
+    <div class="num">$50K</div>
+    <div class="lbl">Cvent second deal</div>
+    <div class="note">life sciences, same play</div>
+  </div>
+  
+  <div class="stat-strip-item" style="--idx: 2;">
+    <div class="num">3,000+</div>
+    <div class="lbl">Internal subscribers</div>
+    <div class="note">1K customers + 2K reps</div>
+  </div>
+  
+  <div class="stat-strip-item" style="--idx: 3;">
+    <div class="num">30-40%</div>
+    <div class="lbl">Internal open rate</div>
+    <div class="note">10-15pp above marketing baseline</div>
+  </div>
+  
+</div>
+
+
+
+
+<h2>Thesis</h2>
+<p>Your product roadmap is a sales asset, not a PM artifact. Vercel ships continuously - your AEs should walk into expansion conversations with developers and platform leads holding the same view of what&#39;s shipping next as your customers. The reps who pull up the Vercel&#39;s published release page mid-call close more competitive deals - because the answer to &#34;is X on the roadmap?&#34; lives in the meeting, not in a Slack thread chasing your PM team.</p>
+
+
+
+
+
+
+
+<h2>Phased rollout</h2>
+<div class="timeline">
+  
+  <div class="phase">
+    <div class="phase-head">
+      <div class="phase-name">Step 1: Your AEs subscribe to the Vercel roadmap alongside customers</div>
+      <span class="pill">Week Pre-cycle</span>
+    </div>
+    <p class="phase-summary">Your reps see new framework features, edge runtime updates, and infra capabilities the same moment your developer customers do. No more relying on a forwarded Loom from product.</p>
+    
+    <div class="phase-section-label">Activities</div>
+    <ul><li>Every AE subscribed to the Vercel roadmap distribution list (same email/Slack channel customers see)</li><li>Release announcements hit reps&#39; inboxes before the customer-facing tweet goes out</li><li>AEs can pull up the live roadmap page on any device during a sales call</li></ul>
+    
+    
+    <div class="phase-section-label">Deliverables</div>
+    <ul><li>Vercel sales org on the same subscriber list as Pro/Enterprise customers</li><li>30-40% internal open rate as the early signal AEs are actually reading it</li></ul>
+    
+    
+    <div class="phase-gate"><strong style="color: var(--accent);">Gate:</strong> Before step 2: every Vercel AE can locate the public roadmap in under 30 seconds and name 3 features that shipped this month from memory.</div>
+    
+  </div>
+  
+  <div class="phase">
+    <div class="phase-head">
+      <div class="phase-name">Step 2: Bring the roadmap into the deal moment</div>
+      <span class="pill">Week In-call</span>
+    </div>
+    <p class="phase-summary">When a developer or engineering leader asks &#34;is X on the roadmap?&#34; - share screen, pull up Vercel&#39;s published page, walk them through it live.</p>
+    
+    <div class="phase-section-label">Activities</div>
+    <ul><li>AEs use the customer-facing roadmap, not an internal Linear/Jira view (the published version is the version a developer trusts)</li><li>When a prospect engineering lead asks about edge functions, ISR, framework support, or platform features - the AE shows the roadmap entry on screen</li><li>Follow-up emails link the prospect back to the same roadmap page so they return to it themselves between meetings</li></ul>
+    
+    
+    <div class="phase-section-label">Deliverables</div>
+    <ul><li>Live roadmap shared on screen in at least the next 5 mid-cycle calls</li><li>Follow-up email template links the prospect back to the roadmap page</li></ul>
+    
+    
+    <div class="phase-gate"><strong style="color: var(--accent);">Gate:</strong> If a Vercel AE can&#39;t pull the roadmap up in under 30 seconds in a live call, the page isn&#39;t bookmarked. Fix that.</div>
+    
+  </div>
+  
+  <div class="phase">
+    <div class="phase-head">
+      <div class="phase-name">Step 3: Walk Vercel&#39;s developer-buyers through shipped, shipping, on-deck</div>
+      <span class="pill">Week Mid-call</span>
+    </div>
+    <p class="phase-summary">Specific, named, dated. The roadmap stops being abstract and becomes a deal-stage conversation about your platform&#39;s trajectory.</p>
+    
+    <div class="phase-section-label">Activities</div>
+    <ul><li>Three buckets: what shipped in the last 60 days, what&#39;s shipping this quarter, what&#39;s queued next quarter</li><li>Call out features that match the prospect&#39;s stack - by name, not category (&#34;the ISR cache invalidation API,&#34; not &#34;caching improvements&#34;)</li><li>Acknowledge what&#39;s NOT on the roadmap. Engineering leaders trust reps who say &#34;that&#39;s not on the plan, but here&#39;s what is&#34; more than reps who pretend everything is coming</li></ul>
+    
+    
+    <div class="phase-section-label">Deliverables</div>
+    <ul><li>Each Vercel AE can name 5 shipped features and 3 on-deck features that match a typical Pro/Enterprise prospect&#39;s use case</li><li>Customer leaves the call knowing exactly where on the roadmap to look for updates next week</li></ul>
+    
+    
+    <div class="phase-gate"><strong style="color: var(--accent);">Gate:</strong> Prospect engineering lead asks at least one follow-up question about a future Vercel feature in the same call. That&#39;s the signal the conversation shifted from &#34;are you the right vendor&#34; to &#34;how soon can we get there.&#34;</div>
+    
+  </div>
+  
+  <div class="phase">
+    <div class="phase-head">
+      <div class="phase-name">Step 4: Close on what&#39;s shipping next, not just what&#39;s there now</div>
+      <span class="pill">Week Close</span>
+    </div>
+    <p class="phase-summary">Chad&#39;s words at Cvent: this &#34;completely changed the tone of the conversation.&#34; Customer signed for $100K ARR. For Vercel, the analogous moment is the engineering team committing to the Pro/Enterprise upgrade because they can SEE the platform trajectory.</p>
+    
+    <div class="phase-section-label">Activities</div>
+    <ul><li>The deal closes on Vercel&#39;s future state, not just current state - the framework support, edge capability, or compliance milestone they need is real, dated, and visible</li><li>Lock in the expansion or renewal conversation around upcoming features the customer now trusts will land</li><li>Document which roadmap items moved the deal - those patterns repeat across the next 10 mid-cycle closes</li></ul>
+    
+    
+    <div class="phase-section-label">Deliverables</div>
+    <ul><li>Closed-won attribution naming which Vercel roadmap items influenced the deal</li><li>A repeatable play that doesn&#39;t depend on the AE&#39;s depth in framework internals - it depends on the roadmap page being live and current</li></ul>
+    
+    
+    <div class="phase-gate"><strong style="color: var(--accent);">Gate:</strong> The play replicates. A second Vercel deal closes off the same roadmap motion. (Cvent ran it again on a $50K life-sciences deal - the play held.)</div>
+    
+  </div>
+  
+</div>
+
+
+
+
+
+
+
+<h2>What good looks like at the end</h2>
+<div class="capabilities">
+  
+  <div class="cap-item">
+    <div class="cap-label">First mid-cycle close off the roadmap</div>
+    <div class="cap-value">Cycle 1-2</div>
+    <div class="cap-desc">the first deal teaches the cadence</div>
+  </div>
+  
+  <div class="cap-item">
+    <div class="cap-label">Repeatable across the Vercel AE team</div>
+    <div class="cap-value">Quarter 1</div>
+    <div class="cap-desc">play is no longer rep-specific</div>
+  </div>
+  
+  <div class="cap-item">
+    <div class="cap-label">Roadmap-influenced revenue tracked in CRM</div>
+    <div class="cap-value">Quarter 2</div>
+    <div class="cap-desc">closed-won notes name the features that mattered</div>
+  </div>
+  
+  <div class="cap-item">
+    <div class="cap-label">Roadmap is a renewal + expansion lever</div>
+    <div class="cap-value">Year 1</div>
+    <div class="cap-desc">Pro-to-Enterprise conversations open with the roadmap, not the spec sheet</div>
+  </div>
+  
+</div>
+
+
+
+
+  
+  
+  <div class="offer">
+    <div class="offer-header">
+      <div class="offer-logo-mark">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAEvmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgZXhpZjpQaXhlbFhEaW1lbnNpb249IjI1NiIKICAgZXhpZjpQaXhlbFlEaW1lbnNpb249IjI1NiIKICAgZXhpZjpDb2xvclNwYWNlPSIxIgogICB0aWZmOkltYWdlV2lkdGg9IjI1NiIKICAgdGlmZjpJbWFnZUxlbmd0aD0iMjU2IgogICB0aWZmOlJlc29sdXRpb25Vbml0PSIyIgogICB0aWZmOlhSZXNvbHV0aW9uPSI3Mi4wIgogICB0aWZmOllSZXNvbHV0aW9uPSI3Mi4wIgogICBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIgogICBwaG90b3Nob3A6SUNDUHJvZmlsZT0ic1JHQiBJRUM2MTk2Ni0yLjEiCiAgIHhtcDpNb2RpZnlEYXRlPSIyMDE5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" alt="">
+        
+      </div>
+      <div>
+        <div class="offer-header-name">LaunchNotes</div>
+        <div class="offer-header-sub">The product communications platform for software teams - release notes, announcements, and updates across email, Slack, and Teams.</div>
+      </div>
+      
+    </div>
+    <div class="offer-body">
+      <h3>Roniesha, want to see what this looks like for the Vercel team?</h3>
+      <p>30 min - we&#39;ll walk through which Vercel roadmap pages your AEs would build, how your existing PMM and Slack workflow folds in (or doesn&#39;t), and which next Pro-to-Enterprise deal could move with the play above. Bring this page; we&#39;ll mark the spots that don&#39;t fit yet.</p>
+      <a class="offer-btn" href="https://launchnotes.com/demo">Book 30 min with Jack</a>
+      
+    </div>
+  </div>
+
+  
+</main>
+
+<footer class="footer">
+  <div>Prepared by LaunchNotes · <a href="https://launchnotes.com" style="color: var(--text-muted);">LaunchNotes</a></div>
+  <div>May 2026</div>
+</footer>
+
+<script>
+(function(){
+  const bar = document.getElementById('readingBar');
+  if (!bar) return;
+  function update() {
+    const h = document.documentElement;
+    const scrolled = h.scrollTop || document.body.scrollTop;
+    const height = (h.scrollHeight || document.body.scrollHeight) - h.clientHeight;
+    const pct = height > 0 ? (scrolled / height) * 100 : 0;
+    bar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+</script>
+
+</body>
+</html>
