@@ -303,6 +303,102 @@
   .offer-btn:active { transform: translateY(0); }
   .offer-top .offer-btn { animation: ctaPulse 2.4s ease-in-out 1s 2; }
 
+  /* FLOW STEPS — sequenced cards with arrows between */
+  .flow { display: flex; flex-direction: column; gap: 36px; margin: 30px 0; font-family: var(--font-sans); }
+  .flow-step {
+    padding: 22px 24px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); position: relative;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    text-align: left;
+  }
+  .flow-step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    border-color: var(--accent);
+  }
+  .flow-step + .flow-step::before {
+    content: '↓'; position: absolute; left: 50%; top: -28px; transform: translateX(-50%);
+    color: var(--accent); font-size: 20px; font-weight: 800;
+  }
+  .flow-step .flow-num { font-size: 11px; font-weight: 800; color: var(--accent); letter-spacing: 0.14em; text-transform: uppercase; }
+  .flow-step .flow-name { font-size: 17px; font-weight: 800; color: var(--text); margin: 8px 0 8px; letter-spacing: -0.01em; }
+  .flow-step .flow-desc { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; }
+  .flow-step .flow-desc p { margin: 0 0 10px; }
+  .flow-step .flow-desc p:last-child { margin-bottom: 0; }
+  .flow-step .flow-example {
+    margin-top: 12px; padding: 10px 14px;
+    background: var(--surface-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-size: 13.5px; color: var(--text-muted); line-height: 1.55;
+    font-style: italic;
+  }
+
+  /* CODE BLOCK — copy/paste-ready content (sequencer snippets, templates) */
+  .code-block {
+    margin: 26px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface-2);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    text-align: left;
+  }
+  .code-block-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-sans);
+    font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .code-block-header .label { color: var(--accent); }
+  .code-block-header .hint { font-weight: 600; letter-spacing: 0.04em; text-transform: none; color: var(--text-muted); font-size: 11px; }
+  .code-block pre {
+    margin: 0;
+    padding: 18px 20px;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 13px; line-height: 1.65; color: var(--text);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+  }
+
+  /* DOWNLOAD LINK — prominent clickable file link */
+  .download-link {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    margin: 26px 0;
+    padding: 18px 22px;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    font-family: var(--font-sans);
+    color: var(--text);
+    transition: transform 0.15s, box-shadow 0.15s, border-left-width 0.15s;
+    box-shadow: var(--shadow);
+    text-align: left;
+  }
+  .download-link:hover {
+    transform: translateY(-1px); box-shadow: var(--shadow-md);
+    border-left-width: 6px;
+  }
+  .download-link .download-body { display: flex; flex-direction: column; gap: 4px; }
+  .download-link .download-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .download-link .download-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .download-link .download-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  .download-link .download-arrow {
+    flex-shrink: 0;
+    font-size: 22px; font-weight: 700; color: var(--accent);
+    transition: transform 0.15s;
+  }
+  .download-link:hover .download-arrow { transform: translateX(3px); }
+
   /* TABLES */
   .article table {
     width: 100%; border-collapse: collapse; margin: 22px 0;
@@ -669,7 +765,7 @@
   <div class="phase">
     <div class="phase-head">
       <div class="phase-name">Step 1: Your AEs subscribe alongside customers</div>
-      <span class="pill">Week Pre-cycle</span>
+      <span class="pill">Pre-cycle</span>
     </div>
     <div class="phase-summary"><p>Your reps see new framework features, edge runtime updates, and infra capabilities the same moment your developer customers do.</p><p>No more relying on a forwarded Loom from product.</p></div>
     
@@ -688,7 +784,7 @@
   <div class="phase">
     <div class="phase-head">
       <div class="phase-name">Step 2: Bring the roadmap into the deal moment</div>
-      <span class="pill">Week In-call</span>
+      <span class="pill">In-call</span>
     </div>
     <div class="phase-summary"><p>When a developer or engineering leader asks &#34;is X on the roadmap?&#34; - share screen, pull up Vercel&#39;s published page, walk them through it live.</p><p>Don&#39;t describe the roadmap. Open it.</p></div>
     
@@ -707,7 +803,7 @@
   <div class="phase">
     <div class="phase-head">
       <div class="phase-name">Step 3: Walk Vercel&#39;s developer-buyers through shipped, shipping, on-deck</div>
-      <span class="pill">Week Mid-call</span>
+      <span class="pill">Mid-call</span>
     </div>
     <div class="phase-summary"><p>Specific, named, dated.</p><p>The roadmap stops being abstract and becomes a deal-stage conversation about your platform&#39;s trajectory.</p></div>
     
@@ -726,7 +822,7 @@
   <div class="phase">
     <div class="phase-head">
       <div class="phase-name">Step 4: Close on what&#39;s shipping next, not just what&#39;s there now</div>
-      <span class="pill">Week Close</span>
+      <span class="pill">Close</span>
     </div>
     <div class="phase-summary"><p>Chad&#39;s words at Cvent: this &#34;completely changed the tone of the conversation.&#34;</p><p>Customer signed for $100K ARR.</p><p>For Vercel, the analogous moment is the engineering team committing to the Pro / Enterprise upgrade because they can SEE the platform trajectory.</p></div>
     

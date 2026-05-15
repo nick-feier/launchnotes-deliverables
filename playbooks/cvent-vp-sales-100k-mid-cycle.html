@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>The Cvent Play</title>
 <meta property="og:title" content="The Cvent Play">
-<meta property="og:description" content="How a VP of Sales closed $100K mid-cycle off the product roadmap.">
+<meta property="og:description" content="How Cvent&#39;s VP Enterprise Sales closed 100K ARR mid-cycle - off the product roadmap, on a live customer call.">
 <style>
   :root {
     --bg: #F6F6FC;
@@ -303,6 +303,102 @@
   .offer-btn:active { transform: translateY(0); }
   .offer-top .offer-btn { animation: ctaPulse 2.4s ease-in-out 1s 2; }
 
+  /* FLOW STEPS — sequenced cards with arrows between */
+  .flow { display: flex; flex-direction: column; gap: 36px; margin: 30px 0; font-family: var(--font-sans); }
+  .flow-step {
+    padding: 22px 24px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); position: relative;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    text-align: left;
+  }
+  .flow-step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    border-color: var(--accent);
+  }
+  .flow-step + .flow-step::before {
+    content: '↓'; position: absolute; left: 50%; top: -28px; transform: translateX(-50%);
+    color: var(--accent); font-size: 20px; font-weight: 800;
+  }
+  .flow-step .flow-num { font-size: 11px; font-weight: 800; color: var(--accent); letter-spacing: 0.14em; text-transform: uppercase; }
+  .flow-step .flow-name { font-size: 17px; font-weight: 800; color: var(--text); margin: 8px 0 8px; letter-spacing: -0.01em; }
+  .flow-step .flow-desc { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; }
+  .flow-step .flow-desc p { margin: 0 0 10px; }
+  .flow-step .flow-desc p:last-child { margin-bottom: 0; }
+  .flow-step .flow-example {
+    margin-top: 12px; padding: 10px 14px;
+    background: var(--surface-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-size: 13.5px; color: var(--text-muted); line-height: 1.55;
+    font-style: italic;
+  }
+
+  /* CODE BLOCK — copy/paste-ready content (sequencer snippets, templates) */
+  .code-block {
+    margin: 26px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface-2);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    text-align: left;
+  }
+  .code-block-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-sans);
+    font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .code-block-header .label { color: var(--accent); }
+  .code-block-header .hint { font-weight: 600; letter-spacing: 0.04em; text-transform: none; color: var(--text-muted); font-size: 11px; }
+  .code-block pre {
+    margin: 0;
+    padding: 18px 20px;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 13px; line-height: 1.65; color: var(--text);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+  }
+
+  /* DOWNLOAD LINK — prominent clickable file link */
+  .download-link {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    margin: 26px 0;
+    padding: 18px 22px;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    font-family: var(--font-sans);
+    color: var(--text);
+    transition: transform 0.15s, box-shadow 0.15s, border-left-width 0.15s;
+    box-shadow: var(--shadow);
+    text-align: left;
+  }
+  .download-link:hover {
+    transform: translateY(-1px); box-shadow: var(--shadow-md);
+    border-left-width: 6px;
+  }
+  .download-link .download-body { display: flex; flex-direction: column; gap: 4px; }
+  .download-link .download-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .download-link .download-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .download-link .download-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  .download-link .download-arrow {
+    flex-shrink: 0;
+    font-size: 22px; font-weight: 700; color: var(--accent);
+    transition: transform 0.15s;
+  }
+  .download-link:hover .download-arrow { transform: translateX(3px); }
+
   /* TABLES */
   .article table {
     width: 100%; border-collapse: collapse; margin: 22px 0;
@@ -567,7 +663,7 @@
   <div class="hero-category">Playbook</div>
   
   <h1>The Cvent Play</h1>
-  <p class="hero-lede">How a VP of Sales closed $100K mid-cycle off the product roadmap.</p>
+  <p class="hero-lede">How Cvent&#39;s VP Enterprise Sales closed 100K ARR mid-cycle - off the product roadmap, on a live customer call.</p>
   <div class="hero-meta">
     <span>Playbook</span>
     
@@ -597,8 +693,8 @@
       
     </div>
     <div class="offer-body">
-      <h3>Want to see what this looks like for your sales org?</h3>
-      <p>30 min with Jack Sneeringer.</p><p>We&#39;ll walk through which roadmap pages your reps would build, how your existing Slack / Notion / PMM workflow folds in (or doesn&#39;t), and which next deal could move with the play above.</p><p>Bring this page. We&#39;ll mark the spots that don&#39;t fit yet.</p>
+      <h3>Want to see what this looks like for your team?</h3>
+      <p>30 minutes with Jack Sneeringer.</p><p>We&#39;ll map which roadmap pages your reps would build, how it folds into your existing workflow, and which open deal could move with the play above.</p><p>Bring this page - we&#39;ll mark what doesn&#39;t fit yet.</p>
       <a class="offer-btn" href="https://launchnotes.com/demo">Book 30 min with Jack</a>
       
       <p class="offer-scroll-hint">Then keep reading — the full breakdown is below.</p>
@@ -611,7 +707,7 @@
   
 
 
-<p>Most sales orgs find out about new features the same time as customers - or after.</p><p>Cvent&#39;s VP Enterprise Sales flipped that. He closed a $100K ARR deal mid-cycle by handing the customer the live roadmap on a sales call.</p><p>Here&#39;s the 4-step play. What he did, the language he used, and what changed on the back end.</p>
+<p>You asked for the play. Here it is.</p><p>Cvent&#39;s VP Enterprise Sales was mid-cycle on a deal that kept stalling on one question: &#34;is that feature actually coming?&#34;</p><p>He stopped answering from memory. He pulled up the live product roadmap on the call and walked the customer through it.</p><p>The deal closed at 100K ARR. He ran the same move a month later - another 50K.</p><p>Four steps. What he did, the words he used, and what changed on the back end.</p>
 
 
 
@@ -619,27 +715,27 @@
 <div class="stat-strip">
   
   <div class="stat-strip-item" style="--idx: 0;">
-    <div class="num">$100K</div>
+    <div class="num">100K</div>
     <div class="lbl">ARR closed</div>
     <div class="note">single deal, mid-cycle</div>
   </div>
   
   <div class="stat-strip-item" style="--idx: 1;">
-    <div class="num">$50K</div>
+    <div class="num">50K</div>
     <div class="lbl">Second deal</div>
-    <div class="note">life sciences, same play</div>
+    <div class="note">same play, one month later</div>
   </div>
   
   <div class="stat-strip-item" style="--idx: 2;">
     <div class="num">3,000+</div>
-    <div class="lbl">Internal subscribers</div>
-    <div class="note">1K customers + 2K reps</div>
+    <div class="lbl">On the roadmap feed</div>
+    <div class="note">reps and customers, same view</div>
   </div>
   
   <div class="stat-strip-item" style="--idx: 3;">
     <div class="num">30-40%</div>
     <div class="lbl">Internal open rate</div>
-    <div class="note">10-15pp above marketing baseline</div>
+    <div class="note">10-15pts above their marketing sends</div>
   </div>
   
 </div>
@@ -648,13 +744,13 @@
 
 
 <h2>Thesis</h2>
-<p>The product roadmap is a sales asset, not a PM artifact.</p><p>Reps who walk into a deal with the same view of &#34;what&#39;s shipping next&#34; as the customer close more competitive deals.</p><p>The answer to &#34;is X on the roadmap?&#34; lives in the meeting - not in a Slack thread you have to chase down.</p>
+<p>The product roadmap is a sales asset. Most orgs treat it as a PM artifact.</p><p>When a rep walks into a deal with the same view of what&#39;s shipping as the customer, &#34;is X coming?&#34; stops being a stall - it becomes the close.</p><p>The answer lives in the meeting. Not in a Slack thread the rep has to go chase down.</p>
 
 
 
 <div class="callout">
   <div class="callout-label">Why this works for sales leaders</div>
-  <p>Sales leaders are graded on revenue.</p><p>Forecastio (2025) and SaaStr commentary peg 20-30% of competitive losses to &#34;we already shipped that and didn&#39;t know.&#34;</p><p>For a 35-rep / $60M ARR org running 25% win rate, a 3-point lift on competitive deals is $1.5-2.4M in recoverable ARR per year.</p><p>The Cvent play hits both ends: reps see what&#39;s shipping at the same moment as customers, and the customer leaves the call with a roadmap they can point at.</p>
+  <p>Sales leaders are graded on revenue - not on internal-alignment metrics.</p><p>Forecastio and SaaStr peg 20-30% of competitive losses to &#34;we already shipped that and the rep didn&#39;t know.&#34;</p><p>For a 35-rep org at 60M ARR running a 25% win rate, a 3-point lift on competitive deals is 1.5-2.4M in recoverable ARR a year.</p><p>The play closes both gaps: reps see what&#39;s shipping when customers do, and the customer leaves the call with a roadmap they can point at.</p>
 </div>
 
 
@@ -668,77 +764,65 @@
   
   <div class="phase">
     <div class="phase-head">
-      <div class="phase-name">Step 1: Subscribe alongside customers</div>
-      <span class="pill">Week Pre-cycle</span>
+      <div class="phase-name">Step 1: Get your reps on the roadmap - before the cycle</div>
+      
     </div>
-    <div class="phase-summary"><p>Reps see what&#39;s shipping the same moment customers do.</p><p>No more relying on a forwarded PM email that got buried in someone&#39;s inbox.</p></div>
+    <div class="phase-summary"><p>Reps see what&#39;s shipping the moment customers do.</p><p>Not a forwarded PM email three weeks late.</p></div>
     
     <div class="phase-section-label">Activities</div>
-    <ul><li>Reps subscribe to the same published roadmap your customers see</li><li>Internal release announcements hit the rep&#39;s inbox before the customer&#39;s inbox</li><li>Each rep can pull up the live page on any device, any time</li></ul>
+    <ul><li>Every AE subscribed to the same published roadmap the customer sees</li><li>Release notes hit the rep&#39;s inbox first, not last</li><li>The live page works on any device, mid-call</li></ul>
     
     
-    <div class="phase-section-label">Deliverables</div>
-    <ul><li>Every AE on the roadmap distribution list</li><li>30-40% internal open rate as the early signal that reps are actually reading it</li></ul>
     
-    
-    <div class="phase-gate"><strong style="color: var(--accent);">Gate:</strong> Every rep can locate the published roadmap page and answer &#34;what shipped last week&#34; from memory.</div>
+    <div class="phase-gate"><strong style="color: var(--accent);">Gate:</strong> Every rep can pull up the roadmap and name what shipped last week - from memory.</div>
     
   </div>
   
   <div class="phase">
     <div class="phase-head">
-      <div class="phase-name">Step 2: Bring the roadmap into the deal moment</div>
-      <span class="pill">Week In-call</span>
+      <div class="phase-name">Step 2: Bring it into the deal - don&#39;t describe it, open it</div>
+      
     </div>
-    <div class="phase-summary"><p>Don&#39;t talk about the roadmap.</p><p>Open it.</p></div>
+    <div class="phase-summary"><p>The customer asks &#34;is X coming?&#34;</p><p>Share screen. Pull up the page. Walk them through it live.</p></div>
     
     <div class="phase-section-label">Activities</div>
-    <ul><li>When the customer asks &#34;is X on the roadmap?&#34; - share screen, pull up the page, walk them through it live</li><li>Use the published roadmap, not an internal Jira view (the published version is the version the customer trusts)</li><li>Reference the page by name in follow-up emails so the customer comes back to it themselves</li></ul>
+    <ul><li>Use the published roadmap, not an internal Jira board - the published version is the one the customer trusts</li><li>Name the page in your follow-up so the customer goes back to it themselves</li></ul>
     
     
-    <div class="phase-section-label">Deliverables</div>
-    <ul><li>Live roadmap shared on screen in at least the next 5 mid-cycle calls</li><li>Follow-up email links the customer back to the roadmap page</li></ul>
     
-    
-    <div class="phase-gate"><strong style="color: var(--accent);">Gate:</strong> If a rep can&#39;t pull the roadmap up in under 30 seconds in a live call, the page isn&#39;t bookmarked. Fix that.</div>
+    <div class="phase-gate"><strong style="color: var(--accent);">Gate:</strong> If it takes more than 30 seconds to pull up mid-call, it&#39;s not bookmarked. Fix that.</div>
     
   </div>
   
   <div class="phase">
     <div class="phase-head">
-      <div class="phase-name">Step 3: Walk through shipped, shipping, and on-deck</div>
-      <span class="pill">Week Mid-call</span>
+      <div class="phase-name">Step 3: Walk shipped, shipping, on-deck - specific and dated</div>
+      
     </div>
-    <div class="phase-summary"><p>Specific, named, dated.</p><p>The roadmap stops being abstract and starts being a deal conversation.</p></div>
+    <div class="phase-summary"><p>Three buckets. Named features, real dates.</p><p>The roadmap stops being abstract and becomes the deal conversation.</p></div>
     
     <div class="phase-section-label">Activities</div>
-    <ul><li>Three columns: what shipped in the last 60 days, what&#39;s shipping this quarter, what&#39;s queued next quarter</li><li>Call out the features that map to the customer&#39;s pain - by name, not category</li><li>Acknowledge what&#39;s not on the roadmap. Reps who say &#34;that&#39;s not on the plan, but here&#39;s what is&#34; build more trust than reps who pretend everything is coming</li></ul>
+    <ul><li>Shipped in the last 60 days / shipping this quarter / queued next quarter</li><li>Call out the features that map to their pain - by name, not category</li><li>Say what&#39;s NOT on the roadmap too. &#34;Not planned, but here&#39;s what is&#34; beats pretending everything&#39;s coming</li></ul>
     
     
-    <div class="phase-section-label">Deliverables</div>
-    <ul><li>Rep can name 5 shipped features and 3 on-deck features that match the customer&#39;s use case</li><li>Customer leaves the call knowing where on the page to find updates next week</li></ul>
     
-    
-    <div class="phase-gate"><strong style="color: var(--accent);">Gate:</strong> Customer asks at least one follow-up question about a future feature in the same call. That&#39;s the signal the conversation shifted.</div>
+    <div class="phase-gate"><strong style="color: var(--accent);">Gate:</strong> The customer asks a follow-up about a future feature. That&#39;s the tone shift.</div>
     
   </div>
   
   <div class="phase">
     <div class="phase-head">
-      <div class="phase-name">Step 4: Close on what&#39;s coming next</div>
-      <span class="pill">Week Close</span>
+      <div class="phase-name">Step 4: Close on what&#39;s next - not just what&#39;s there</div>
+      
     </div>
-    <div class="phase-summary"><p>Chad&#39;s words: this &#34;completely changed the tone of the conversation.&#34;</p><p>Customer signed for $100K ARR.</p></div>
+    <div class="phase-summary"><p>Chad&#39;s words: it &#34;completely changed the tone of the conversation.&#34;</p><p>The customer signed at 100K ARR.</p></div>
     
     <div class="phase-section-label">Activities</div>
-    <ul><li>The deal closes on the future state, not the current state</li><li>Lock in the renewal or expansion conversation around upcoming features (the customer now knows they are real, dated, and visible)</li><li>Document which roadmap items moved the deal - the same patterns repeat on the next mid-cycle close</li></ul>
+    <ul><li>The deal closes on the future state - the features they now know are real, dated, and visible</li><li>Note which roadmap items moved the deal - the pattern repeats on the next close</li></ul>
     
     
-    <div class="phase-section-label">Deliverables</div>
-    <ul><li>Closed-won attribution noting which roadmap items influenced the deal</li><li>A repeatable play that doesn&#39;t depend on the rep&#39;s product fluency - it depends on the roadmap page existing and being current</li></ul>
     
-    
-    <div class="phase-gate"><strong style="color: var(--accent);">Gate:</strong> The play replicates. A second deal closes off the same roadmap motion. (Chad ran it again on a $50K life-sciences deal.)</div>
+    <div class="phase-gate"><strong style="color: var(--accent);">Gate:</strong> It replicates. Chad ran the same move a month later and closed another 50K.</div>
     
   </div>
   
@@ -756,23 +840,23 @@
   <div class="cap-item">
     <div class="cap-label">First mid-cycle close off the roadmap</div>
     <div class="cap-value">Cycle 1-2</div>
-    <div class="cap-desc">the first deal teaches reps the cadence</div>
+    <div class="cap-desc">the first deal teaches the cadence</div>
   </div>
   
   <div class="cap-item">
-    <div class="cap-label">Repeatable across reps</div>
+    <div class="cap-label">Repeatable across the team</div>
     <div class="cap-value">Quarter 1</div>
-    <div class="cap-desc">play is no longer rep-specific</div>
+    <div class="cap-desc">the play stops depending on one rep</div>
   </div>
   
   <div class="cap-item">
-    <div class="cap-label">Roadmap-influenced revenue tracked in CRM</div>
+    <div class="cap-label">Roadmap-influenced revenue in CRM</div>
     <div class="cap-value">Quarter 2</div>
-    <div class="cap-desc">closed-won notes name the features that mattered</div>
+    <div class="cap-desc">closed-won notes name the features that moved the deal</div>
   </div>
   
   <div class="cap-item">
-    <div class="cap-label">Roadmap is a renewal + expansion lever</div>
+    <div class="cap-label">Roadmap as a renewal lever</div>
     <div class="cap-value">Year 1</div>
     <div class="cap-desc">expansion calls open with the roadmap, not the spec sheet</div>
   </div>
@@ -797,8 +881,8 @@
       
     </div>
     <div class="offer-body">
-      <h3>Want to see what this looks like for your sales org?</h3>
-      <p>30 min with Jack Sneeringer.</p><p>We&#39;ll walk through which roadmap pages your reps would build, how your existing Slack / Notion / PMM workflow folds in (or doesn&#39;t), and which next deal could move with the play above.</p><p>Bring this page. We&#39;ll mark the spots that don&#39;t fit yet.</p>
+      <h3>Want to see what this looks like for your team?</h3>
+      <p>30 minutes with Jack Sneeringer.</p><p>We&#39;ll map which roadmap pages your reps would build, how it folds into your existing workflow, and which open deal could move with the play above.</p><p>Bring this page - we&#39;ll mark what doesn&#39;t fit yet.</p>
       <a class="offer-btn" href="https://launchnotes.com/demo">Book 30 min with Jack</a>
       
     </div>
