@@ -94,6 +94,42 @@
     font-size: 13px;
     color: #c0392b;
   }
+  .variants-section {
+    max-width: 760px;
+    margin: 32px auto 8px;
+    padding: 0 4px;
+  }
+  .variants-section h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    margin: 0 0 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .variants-section p {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 16px;
+    line-height: 1.55;
+  }
+  .variant-card {
+    background: var(--msg-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+  }
+  .variant-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #e8e8e8;
+  }
+  .variant-meta .variant-kind { font-weight: 700; color: var(--text); }
+  .variant-meta code { background: #f4f4f4; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+  .variant-block { font-size: 15px; line-height: 1.46; }
   .legend {
     max-width: 760px;
     margin: 0 auto 40px;
@@ -137,7 +173,7 @@
 <div class="bk-divider"></div>
 <div class="bk-section">Going live: <b>612 prospects</b> at VPs of Sales and Sales Directors at growth-stage B2B SaaS companies (50-300 headcount) running cold outbound in-house. Filtered to teams already sending — domain has SPF + at least one warm-up tool signature in the last 90 days. The message opens with an offer to run a 12-point audit of their current cold-email infrastructure and surface the missed meetings sitting in the setup.</div>
 <div class="bk-section"><b>💬  The Pitch</b><br><b>Pain:</b>  Outbound infra at growth-stage SaaS teams is silently capping meeting volume — domain-level reputation, warm-up state, and sequence pacing each leak inbox placement without showing up as a bounce<br><b>Proof:</b>  A cohort of B2B SaaS Sales leaders we audited last quarter recovered 6-9 missed meetings per month per sender after the fixes shipped<br><b>Ask:</b>  a per-prospect 1-page audit report — domain health, warm-up state, auth posture, sequence pacing, list-quality signals — delivered within 2 business days</div>
-<div class="bk-section"><b>🖼️  Sample deliverable</b><br>A real per-lead audit, rendered for Mara (VP Sales, Hatch CRM) — one of the 612 prospects in this campaign. This is what every interested reply turns into, built for that specific prospect within 2 business days.<br><br><<SAMPLE_LINK — Slack link format <url|Open the sample audit>></div>
+<div class="bk-section"><b>🖼️  Sample deliverable</b><br>A real per-lead audit, rendered for Mara (VP Sales, Hatch CRM) — one of the 612 prospects in this campaign. This is what every interested reply turns into, built for that specific prospect within 2 business days.<br><br><<SAMPLE_LINK — Slack link format <url|action-led label>></div>
 <div class="bk-section"><b>📨  Sequence</b>  (3 emails over ~4 days, thread-reply follow-ups)<br><b>E1 · Day 1:</b>  permission-frame ask to run the audit, anchored on the cohort recovery number<br><b>E2 · Day 2:</b>  named-client proof + offer of a tier-matched sequence teardown<br><b>E3 · Day 4:</b>  second case study + referral redirect if not the right owner</div>
 <div class="bk-section"><b>✅  Personalization & screening</b><br>First-name + company-name throughout, plus one per-lead signal pulled from each prospect's domain (current sender setup or recent hiring activity). Industry + title filters at the source, signal-verified that each prospect's domain currently shows outbound activity, ICP fit confirmed per prospect, multi-stage email verification, zero overlap with prospects reached in the last 60 days</div>
 <div class="bk-divider"></div>
@@ -149,6 +185,44 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="variants-section">
+    <h2>Sample block — all 4 cta_kind variants</h2>
+    <p>The launch alert renders ONE of these per campaign, picked by the E1 DEL's <code>cta_kind</code> field (default <code>deliverable</code>). The full alert above uses the <code>deliverable</code> variant; the other three show how the same block adapts when the campaign offers a meeting, trial, or other next-step link instead.</p>
+    
+    <div class="variant-card">
+      <div class="variant-meta">
+        <span class="variant-kind">cta_kind: <code>deliverable</code></span>
+        <span class="variant-when">— HTML build (per-lead or evergreen), or a pre-existing PDF / Notion / hosted page the prospect reads</span>
+      </div>
+      <div class="variant-block"><b>🖼️  Sample deliverable</b><br>A real per-lead audit, rendered for Mara (VP Sales, Hatch CRM) — one of the 612 prospects in this campaign. This is what every interested reply turns into, built for that specific prospect within 2 business days.<br><br><a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/nick-feier/launchnotes-deliverables/main/samples/_preview/2026-05-17-hatch-crm-audit.html">Open the sample audit</a></div>
+    </div>
+    
+    <div class="variant-card">
+      <div class="variant-meta">
+        <span class="variant-kind">cta_kind: <code>meeting</code></span>
+        <span class="variant-when">— Calendar / booking link campaigns — Calendly, Savvycal</span>
+      </div>
+      <div class="variant-block"><b>🗓️  Meeting flow</b><br>Every interested reply lands at a 20-min intro call with Nick. Mornings only, 09:00–12:00 PT.<br><br><a href="https://calendly.com/nick/intro">Book a time</a></div>
+    </div>
+    
+    <div class="variant-card">
+      <div class="variant-meta">
+        <span class="variant-kind">cta_kind: <code>trial</code></span>
+        <span class="variant-when">— Free-trial signup campaigns</span>
+      </div>
+      <div class="variant-block"><b>🆓  Trial flow</b><br>Every interested reply receives a 30-day full-access trial signup at app.acme.com — no credit card, full feature access, dedicated onboarding inside the first week.<br><br><a href="https://app.acme.com/trial">Start the trial</a></div>
+    </div>
+    
+    <div class="variant-card">
+      <div class="variant-meta">
+        <span class="variant-kind">cta_kind: <code>next_step</code></span>
+        <span class="variant-when">— Pricing page, demo video, gated resource that isn't a primary asset</span>
+      </div>
+      <div class="variant-block"><b>➡️  Next-step flow</b><br>Every interested reply lands at a 4-minute walkthrough video Nick recorded showing the exact mechanism the cold email pitches.<br><br><a href="https://loom.com/share/abc123">Open the walkthrough</a></div>
+    </div>
+    
   </div>
 
   <div class="legend">
