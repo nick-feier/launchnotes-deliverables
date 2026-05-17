@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cold Email Infrastructure Audit — Acme Co.</title>
+<meta property="og:title" content="Cold Email Infrastructure Audit — Acme Co.">
+<meta property="og:description" content="Alex, this is what a 12-point review of Acme Co.&#39;s current sending setup turned up. Read the verdict below, then the findings ordered by impact.">
+<style>
+  :root {
+    --bg: #FFF9F5;
+    --surface: #FFFFFF;
+    --surface-2: #FFF9F5;
+    --border: #FFEDE0;
+    --border-2: #FFEDE0;
+    --text: #41220B;
+    --text-muted: #64748B;
+    --text-dim: #64748B;
+    --nav-bg: #41220B;
+    --nav-text: rgba(255,255,255,0.62);
+    --accent: #FF6900;
+    --accent-light: #FF6900;
+    --accent-bright: #FF6900;
+    --accent-bg: #FFE8D9;
+    --accent-border: #FFE8D9;
+    --red-bg: rgba(239,68,68,0.06);
+    --red-border: rgba(239,68,68,0.22);
+    --green-bg: #FFE8D9;
+    --green-border: #FFE8D9;
+    --radius: 6px;
+    --radius-lg: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.07);
+    --font-serif: 'Iowan Old Style', 'Georgia', 'Times New Roman', serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.8;
+    padding-bottom: 72px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  .nav {
+    background: var(--nav-bg);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo-mark {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo-mark img { width: 100%; height: 100%; object-fit: cover; }
+  .nav-logo-mark .initials { color: #fff; font-family: var(--font-sans); font-weight: 800; font-size: 12px; letter-spacing: -0.01em; }
+  .nav-logo-name {
+    font-family: var(--font-sans);
+    font-size: 15px; font-weight: 700;
+    color: #fff; letter-spacing: -0.01em;
+  }
+  .nav-meta { font-family: var(--font-sans); font-size: 13px; color: var(--nav-text); }
+  .nav-cta {
+    font-family: var(--font-sans);
+    font-size: 13px; font-weight: 700;
+    padding: 8px 18px;
+    background: var(--accent-bright);
+    color: #fff; border-radius: var(--radius);
+    text-decoration: none; transition: filter 0.15s;
+  }
+  .nav-cta:hover { filter: brightness(1.1); }
+
+  /* READING BAR */
+  .reading-bar {
+    position: fixed; top: 56px; left: 0;
+    height: 2px; background: var(--accent-bright);
+    z-index: 200; width: 0%; transition: width 0.1s;
+  }
+
+  /* HERO */
+  .hero { max-width: 740px; margin: 0 auto; padding: 64px 40px 0; }
+  .hero-category {
+    font-family: var(--font-sans);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 18px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-category::before {
+    content: ''; display: inline-block;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent-bright);
+  }
+  .hero-prepared {
+    font-family: var(--font-sans);
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: 999px;
+    padding: 6px 14px; margin-bottom: 22px;
+  }
+  .hero-prepared::before {
+    content: ''; display: inline-block;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-bright);
+  }
+  .hero-prepared strong { color: var(--accent); font-weight: 800; }
+  .hero h1 {
+    font-size: 38px; font-weight: 700;
+    line-height: 1.15; letter-spacing: -0.02em;
+    color: var(--text); margin-bottom: 18px;
+  }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero-lede {
+    font-size: 19px; color: var(--text-muted);
+    line-height: 1.65; margin-bottom: 24px; font-style: italic;
+  }
+  .hero-meta {
+    font-family: var(--font-sans);
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    font-size: 13px; color: var(--text-dim);
+    padding-bottom: 28px; border-bottom: 1px solid var(--border);
+  }
+  .hero-meta-dot { width: 3px; height: 3px; background: var(--border-2); border-radius: 50%; }
+
+  /* ARTICLE */
+  .article { max-width: 740px; margin: 0 auto; padding: 0 40px 80px; }
+  .article > * + * { margin-top: 22px; }
+  .article p { margin: 0 0 22px; }
+  .article p:last-child { margin-bottom: 0; }
+  .article h2 {
+    font-family: var(--font-sans);
+    font-size: 22px; font-weight: 800; letter-spacing: -0.02em;
+    color: var(--text); margin: 52px 0 14px;
+  }
+  .article h3 {
+    font-family: var(--font-sans);
+    font-size: 17px; font-weight: 700;
+    color: var(--text); margin: 34px 0 10px;
+  }
+  .article h3 .num { color: var(--accent); margin-right: 4px; }
+  .article hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+  .article em { font-style: italic; color: var(--text-muted); }
+  .article strong { font-weight: 700; color: var(--text); }
+
+  /* PULL QUOTE */
+  .pull-quote {
+    border-left: 3px solid var(--accent-bright);
+    margin: 32px 0; padding: 8px 0 8px 26px;
+    font-size: 20px; font-style: italic;
+    color: var(--text-muted); line-height: 1.6;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: var(--radius-lg);
+    padding: 18px 22px; margin: 28px 0;
+    font-family: var(--font-sans);
+    font-size: 14px; line-height: 1.65; color: var(--text-muted);
+  }
+  .callout-label {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 7px;
+  }
+
+  /* VS GRID (old vs new) */
+  .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 26px 0; font-family: var(--font-sans); }
+  @media(max-width:600px) { .vs-grid { grid-template-columns: 1fr; } }
+  .vs-col { padding: 18px 20px; border-radius: var(--radius-lg); }
+  .vs-old { background: var(--red-bg); border: 1px solid var(--red-border); }
+  .vs-new { background: var(--green-bg); border: 1px solid var(--green-border); }
+  .vs-label { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  .vs-old .vs-label { color: #DC2626; }
+  .vs-new .vs-label { color: var(--accent); }
+  .vs-item { font-size: 13px; color: var(--text-muted); margin-bottom: 5px; line-height: 1.5; display: flex; gap: 7px; }
+
+  /* CAPABILITIES GRID */
+  .capabilities { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 26px 0 32px; font-family: var(--font-sans); }
+  @media(max-width:600px) { .capabilities { grid-template-columns: 1fr; } }
+  .cap-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 16px 18px;
+    box-shadow: var(--shadow); border-top: 2px solid var(--accent-bright);
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+    animation-delay: calc(0.05s + var(--idx, 0) * 0.07s);
+    transition: transform 0.2s, box-shadow 0.2s, border-top-width 0.2s;
+  }
+  .cap-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-top-width: 4px; }
+  .cap-label { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .cap-value { font-size: 22px; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; margin: 4px 0 4px; letter-spacing: -0.01em; }
+  .cap-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  /* EXAMPLE / FINDING BLOCK */
+  .example-block {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 22px 26px; margin: 26px 0;
+    font-family: var(--font-sans); box-shadow: var(--shadow);
+    transition: box-shadow 0.25s, border-color 0.25s;
+  }
+  .example-block:hover { box-shadow: var(--shadow-md); border-color: var(--accent-border); }
+  .example-block h4 { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 10px; letter-spacing: -0.01em; }
+  .example-block p { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
+  .example-block .evidence {
+    background: var(--surface-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 10px 14px; margin: 10px 0;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 12.5px; color: var(--text-muted); line-height: 1.5;
+  }
+  .example-block .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+
+  /* PILL / BADGE */
+  .pill {
+    font-family: var(--font-sans);
+    display: inline-block; padding: 3px 9px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+    background: var(--accent-bg); color: var(--accent);
+    text-transform: uppercase;
+  }
+  .pill.danger { background: rgba(239,68,68,0.1); color: #DC2626; }
+  .pill.warning { background: rgba(245,158,11,0.14); color: #B45309; }
+  .pill.success { background: var(--green-bg); color: var(--accent); }
+
+  /* OFFER / CTA BLOCK */
+  .offer {
+    margin: 60px 0 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow-md);
+    font-family: var(--font-sans);
+  }
+  /* asset block — optional downloadable file bundled with the deliverable */
+  .asset-block {
+    margin: 48px 0 0;
+    padding: 24px 26px;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    font-family: var(--font-sans);
+  }
+  .asset-label {
+    font-size: 13px; font-weight: 700; letter-spacing: -0.01em;
+    color: var(--text); margin-bottom: 10px;
+  }
+  .asset-btn {
+    display: inline-block; margin-top: 4px;
+    padding: 10px 20px;
+    background: var(--accent-bright); color: #fff;
+    font-size: 13px; font-weight: 700;
+    border-radius: var(--radius); text-decoration: none;
+  }
+  .asset-btn:hover { filter: brightness(1.08); }
+  .asset-pending {
+    margin-top: 4px; padding: 10px 14px;
+    background: var(--accent-bg); border: 1px dashed var(--accent-border);
+    border-radius: var(--radius);
+    font-size: 13px; color: var(--text-muted);
+  }
+  .asset-note { margin: 10px 0 0; font-size: 12.5px; color: var(--text-muted); }
+  .offer-top {
+    margin: 32px 0 56px;
+    border: 2px solid var(--accent);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  }
+  .offer-header-btn {
+    padding: 9px 18px;
+    background: var(--accent-bright); color: #fff;
+    font-size: 12.5px; font-weight: 700;
+    border-radius: var(--radius); text-decoration: none;
+    white-space: nowrap;
+    transition: filter 0.15s;
+  }
+  .offer-header-btn:hover { filter: brightness(1.1); }
+  .offer-scroll-hint {
+    font-size: 12px !important;
+    color: var(--text-dim) !important;
+    font-style: italic;
+    margin: 14px 0 0 !important;
+  }
+  .offer-header {
+    background: var(--nav-bg); padding: 22px 26px;
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px;
+  }
+  .offer-header-btn { align-self: center; white-space: nowrap; }
+  .offer-logo-mark {
+    width: 32px; height: 32px; border-radius: 7px;
+    overflow: hidden; flex-shrink: 0;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .offer-logo-mark img { width: 100%; height: 100%; object-fit: cover; }
+  .offer-logo-mark .initials { color: #fff; font-weight: 800; font-size: 13px; }
+  .offer-header-name { font-size: 16px; font-weight: 700; color: #fff; }
+  .offer-header-sub { font-size: 12px; color: var(--nav-text); margin-top: 1px; }
+  .offer-body { padding: 24px 26px; text-align: center; }
+  .offer-body h3 { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; letter-spacing: -0.01em; }
+  .offer-body p { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; }
+  .offer-body .offer-scroll-hint { text-align: center; }
+  .offer-btn {
+    padding: 13px 26px; background: var(--accent-bright);
+    color: #fff; font-size: 13px; font-weight: 700;
+    border-radius: var(--radius); text-decoration: none;
+    display: inline-block;
+    transition: transform 0.15s, filter 0.15s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .offer-btn:hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+  .offer-btn:active { transform: translateY(0); }
+  .offer-top .offer-btn { animation: ctaPulse 2.4s ease-in-out 1s 2; }
+
+  /* FLOW STEPS — sequenced cards with arrows between */
+  .flow { display: flex; flex-direction: column; gap: 36px; margin: 30px 0; font-family: var(--font-sans); }
+  .flow-step {
+    padding: 22px 24px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); position: relative;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    text-align: left;
+  }
+  .flow-step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    border-color: var(--accent);
+  }
+  .flow-step + .flow-step::before {
+    content: '↓'; position: absolute; left: 50%; top: -28px; transform: translateX(-50%);
+    color: var(--accent); font-size: 20px; font-weight: 800;
+  }
+  .flow-step .flow-num { font-size: 11px; font-weight: 800; color: var(--accent); letter-spacing: 0.14em; text-transform: uppercase; }
+  .flow-step .flow-name { font-size: 17px; font-weight: 800; color: var(--text); margin: 8px 0 8px; letter-spacing: -0.01em; }
+  .flow-step .flow-desc { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; }
+  .flow-step .flow-desc p { margin: 0 0 10px; }
+  .flow-step .flow-desc p:last-child { margin-bottom: 0; }
+  .flow-step .flow-example {
+    margin-top: 12px; padding: 10px 14px;
+    background: var(--surface-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-size: 13.5px; color: var(--text-muted); line-height: 1.55;
+    font-style: italic;
+  }
+
+  /* CODE BLOCK — copy/paste-ready content (sequencer snippets, templates) */
+  .code-block {
+    margin: 26px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface-2);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    text-align: left;
+  }
+  .code-block-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-sans);
+    font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .code-block-header .label { color: var(--accent); }
+  .code-block-header .hint { font-weight: 600; letter-spacing: 0.04em; text-transform: none; color: var(--text-muted); font-size: 11px; }
+  .code-block pre {
+    margin: 0;
+    padding: 18px 20px;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 13px; line-height: 1.65; color: var(--text);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+  }
+
+  /* DOWNLOAD LINK — prominent clickable file link */
+  .download-link {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    margin: 26px 0;
+    padding: 18px 22px;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    font-family: var(--font-sans);
+    color: var(--text);
+    transition: transform 0.15s, box-shadow 0.15s, border-left-width 0.15s;
+    box-shadow: var(--shadow);
+    text-align: left;
+  }
+  .download-link:hover {
+    transform: translateY(-1px); box-shadow: var(--shadow-md);
+    border-left-width: 6px;
+  }
+  .download-link .download-body { display: flex; flex-direction: column; gap: 4px; }
+  .download-link .download-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .download-link .download-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .download-link .download-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  .download-link .download-arrow {
+    flex-shrink: 0;
+    font-size: 22px; font-weight: 700; color: var(--accent);
+    transition: transform 0.15s;
+  }
+  .download-link:hover .download-arrow { transform: translateX(3px); }
+
+  /* TABLES */
+  .article table {
+    width: 100%; border-collapse: collapse; margin: 22px 0;
+    font-family: var(--font-sans); font-size: 13.5px;
+  }
+  .article th, .article td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .article th { font-weight: 700; color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .article tbody tr:hover { background: var(--surface-2); }
+
+  /* FORM INPUTS (calculator / rubric) */
+  .article input, .article select, .article textarea {
+    font-family: var(--font-sans); font-size: 14px;
+    padding: 9px 12px; border: 1px solid var(--border);
+    border-radius: var(--radius); background: var(--surface);
+    color: var(--text); width: 100%;
+  }
+  .article input:focus, .article select:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+  .article label { font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); display: block; margin-bottom: 6px; font-weight: 600; }
+
+  /* FOOTER */
+  .footer {
+    max-width: 740px; margin: 64px auto 0; padding: 24px 40px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-sans); font-size: 12px;
+    color: var(--text-dim);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+
+  /* TOC for reference archetype */
+  .toc {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 22px;
+    margin: 26px 0;
+    font-family: var(--font-sans);
+  }
+  .toc-label { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+  .toc a { display: block; padding: 6px 0; color: var(--text); text-decoration: none; font-size: 14px; border-bottom: 1px dashed var(--border); }
+  .toc a:last-child { border-bottom: none; }
+  .toc a:hover { color: var(--accent); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes barGrow { from { width: 0; } to { width: var(--target-w); } }
+  @keyframes flexGrow { from { flex: 0; } to { flex: var(--target-flex); } }
+  @keyframes donutDraw { from { stroke-dasharray: 0 100; } }
+  @keyframes ringDraw { from { stroke-dasharray: 0 100; } }
+  @keyframes ctaPulse { 0%, 100% { box-shadow: 0 0 0 0 var(--accent-bg); } 50% { box-shadow: 0 0 0 10px transparent; } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  /* STAT STRIP */
+  .stat-strip {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0; margin: 32px 0; font-family: var(--font-sans);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .stat-strip-item {
+    padding: 18px 12px;
+    border-right: 1px solid var(--border);
+    opacity: 0;
+    animation: fadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: calc(var(--idx, 0) * 0.08s);
+    transition: background 0.2s;
+  }
+  .stat-strip-item:hover { background: var(--surface-2); }
+  .stat-strip-item:last-child { border-right: none; }
+  .stat-strip-item .num { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1.1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .stat-strip-item .num .unit { font-size: 16px; color: var(--text-muted); font-weight: 600; margin-left: 2px; }
+  .stat-strip-item .lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; font-weight: 700; }
+  .stat-strip-item .note { font-size: 12px; color: var(--text-dim); margin-top: 3px; line-height: 1.4; }
+
+  /* CHART BLOCKS */
+  .chart-block {
+    margin: 30px 0; font-family: var(--font-sans);
+    padding: 22px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.25s, border-color 0.25s;
+  }
+  .chart-block:hover { box-shadow: var(--shadow-md); border-color: var(--accent-border); }
+  .chart-title { font-size: 11px; font-weight: 800; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .chart-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+
+  /* HORIZONTAL BAR CHART */
+  .chart-bars { display: grid; gap: 4px; }
+  .chart-bar-row {
+    display: grid; grid-template-columns: 150px 1fr 80px;
+    gap: 14px; align-items: center; padding: 6px 0; font-size: 13px;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+  .chart-bar-row:hover { background: var(--surface-2); }
+  .chart-bar-row .name { color: var(--text-muted); font-weight: 600; }
+  .chart-bar-row .bar-track {
+    background: var(--surface-2); border-radius: 6px; height: 24px;
+    position: relative; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .chart-bar-row .bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+    border-radius: 5px; width: 0;
+    animation: barGrow 1.1s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+    animation-delay: calc(0.15s + var(--idx, 0) * 0.06s);
+    transition: filter 0.2s;
+  }
+  .chart-bar-row:hover .bar-fill { filter: brightness(1.08); }
+  .chart-bar-row .val { font-weight: 800; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+  .chart-bar-row.alt .bar-fill { background: linear-gradient(90deg, var(--text-muted), var(--text-dim)); opacity: 0.75; }
+  .chart-bar-row.alt .val { color: var(--text-muted); }
+
+  /* GROUPED STACKED BARS */
+  .chart-grouped { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .chart-grouped-bar {
+    display: grid; grid-template-columns: 80px 1fr 50px; gap: 12px;
+    align-items: center; font-size: 12.5px;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+    animation-delay: calc(0.1s + var(--idx, 0) * 0.1s);
+  }
+  .chart-grouped-bar .gname { color: var(--text-muted); font-weight: 700; }
+  .chart-grouped-bar .gsegs {
+    display: flex; gap: 3px; height: 32px;
+    background: var(--surface-2); border-radius: 5px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .chart-grouped-bar .gseg {
+    height: 100%; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 11px; font-weight: 700; min-width: 0;
+    transition: filter 0.2s;
+    cursor: default;
+  }
+  .chart-grouped-bar .gseg:hover { filter: brightness(1.1); }
+  .chart-grouped-bar .gtotal { font-weight: 800; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+  .chart-grouped-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border); font-size: 12px; color: var(--text-muted); }
+  .gleg-item { display: flex; align-items: center; gap: 6px; }
+  .gleg-swatch { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* DONUT CHART */
+  .donut-row { display: grid; grid-template-columns: 220px 1fr; gap: 28px; align-items: center; }
+  @media(max-width:600px) { .donut-row { grid-template-columns: 1fr; justify-items: center; } }
+  .donut-svg { animation: fadeUp 0.6s ease forwards; }
+  .donut-slice {
+    transition: stroke-width 0.2s ease, filter 0.2s ease;
+    cursor: default;
+    animation: donutDraw 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .donut-slice:hover { stroke-width: 4.4; filter: brightness(1.12); }
+  .donut-total, .donut-label { animation: fadeUp 0.8s ease forwards; animation-delay: 0.6s; opacity: 0; }
+  .donut-legend { font-size: 13px; }
+  .donut-legend-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 4px; border-bottom: 1px dashed var(--border);
+    opacity: 0;
+    animation: fadeUp 0.4s ease forwards;
+    animation-delay: calc(0.3s + var(--idx, 0) * 0.08s);
+    transition: background 0.2s;
+    border-radius: 4px;
+  }
+  .donut-legend-item:hover { background: var(--surface-2); padding-left: 8px; }
+  .donut-legend-item:last-child { border-bottom: none; }
+  .donut-legend-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .donut-legend-name { flex: 1; color: var(--text-muted); font-size: 13px; line-height: 1.4; }
+  .donut-legend-val { font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .donut-legend-pct { font-weight: 600; color: var(--text-dim); font-size: 11.5px; margin-left: 4px; }
+
+  /* PROGRESS RING (rubric composite score) */
+  .progress-ring-wrap { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; font-family: var(--font-sans); }
+  .ring-svg { animation: fadeUp 0.6s ease forwards; }
+  .ring-slice { animation: ringDraw 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+  .ring-label { font-size: 14px; font-weight: 700; color: var(--text); margin-top: 8px; }
+  .ring-sublabel { font-size: 12px; color: var(--text-muted); }
+
+  /* FLOW DIAGRAM (vertical stack — readable on desktop and mobile) */
+  .flow { display: flex; flex-direction: column; gap: 36px; margin: 30px 0; font-family: var(--font-sans); }
+  .flow-step {
+    padding: 22px 24px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); position: relative;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+    animation-delay: calc(0.1s + var(--idx, 0) * 0.12s);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .flow-step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    border-color: var(--accent);
+  }
+  .flow-step + .flow-step::before {
+    content: '↓'; position: absolute; left: 50%; top: -28px; transform: translateX(-50%);
+    color: var(--accent); font-size: 20px; font-weight: 800;
+  }
+  .flow-step .flow-num { font-size: 11px; font-weight: 800; color: var(--accent); letter-spacing: 0.14em; text-transform: uppercase; }
+  .flow-step .flow-name { font-size: 17px; font-weight: 800; color: var(--text); margin: 8px 0 8px; letter-spacing: -0.01em; }
+  .flow-step .flow-desc { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; }
+
+  /* DROP CAP for first paragraph if requested */
+  .drop-cap::first-letter {
+    float: left; font-size: 64px; line-height: 0.85; font-weight: 800;
+    color: var(--accent); padding: 6px 12px 0 0; font-family: var(--font-serif);
+  }
+
+  /* HERO IMAGE */
+  .hero-image { margin: 22px -40px 0; }
+  .hero-image img { width: 100%; height: auto; border-radius: var(--radius-lg); }
+  @media(max-width:640px) { .hero-image { margin: 22px -24px 0; } }
+
+  /* PHASE TIMELINE (playbook) */
+  .timeline { position: relative; padding-left: 28px; border-left: 2px solid var(--border); margin: 26px 0; font-family: var(--font-sans); }
+  .phase { position: relative; padding: 0 0 32px; }
+  .phase::before {
+    content: ''; position: absolute; left: -37px; top: 4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--accent-bright); border: 3px solid var(--bg);
+  }
+  .phase-head { display: flex; gap: 10px; align-items: baseline; margin-bottom: 6px; flex-wrap: wrap; }
+  .phase-name { font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: -0.01em; }
+  .phase-summary { color: var(--text-muted); font-size: 14px; margin-bottom: 12px; line-height: 1.6; }
+  .phase-section-label { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin: 14px 0 6px; }
+  .phase ul { padding-left: 20px; }
+  .phase li { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 4px; }
+  .phase-gate { margin-top: 14px; padding: 10px 14px; background: var(--surface-2); border-left: 3px solid var(--accent); border-radius: 4px; font-size: 13.5px; color: var(--text-muted); }
+
+  @media (max-width: 640px) {
+    .hero { padding: 40px 24px 0; }
+    .article { padding: 0 24px 60px; }
+    .hero h1 { font-size: 28px; }
+    .article h2 { font-size: 19px; margin-top: 36px; }
+    .nav { padding: 0 16px; }
+    .nav-cta { padding: 7px 14px; font-size: 12px; }
+    body { font-size: 17px; }
+  }
+  @media print {
+    .nav, .reading-bar { display: none; }
+    body { background: #fff; }
+  }
+  
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" href="https://somethinginc.com">
+    <div class="nav-logo-mark">
+      <img src="data:image/webp;base64,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" alt="">
+      
+    </div>
+    <div class="nav-logo-name">Something Inc.</div>
+  </a>
+  <a class="nav-cta" href="https://somethinginc.com/book">Book the call</a>
+</nav>
+<div class="reading-bar" id="readingBar"></div>
+
+<header class="hero">
+  
+  <div class="hero-prepared">Prepared for <strong>Alex</strong> at <strong>Acme Co.</strong></div>
+  
+  <h1>Cold Email Infrastructure Audit</h1>
+  <p class="hero-lede">Alex, this is what a 12-point review of Acme Co.&#39;s current sending setup turned up. Read the verdict below, then the findings ordered by impact.</p>
+  <div class="hero-meta">
+    <span>Audit</span>
+    <span class="hero-meta-dot"></span><span>B2B SaaS</span>
+    <span class="hero-meta-dot"></span><span>May 2026</span>
+    <span class="hero-meta-dot"></span>
+    <span>By Something Inc.</span>
+  </div>
+</header>
+
+
+
+<main class="article">
+  
+  
+  <div class="offer offer-top">
+    <div class="offer-header">
+      <div class="offer-logo-mark">
+        <img src="data:image/webp;base64,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" alt="">
+        
+      </div>
+      <div>
+        <div class="offer-header-name">Something Inc.</div>
+        <div class="offer-header-sub">Outbound infrastructure and pre-demonstration deliverables for B2B GTM teams.</div>
+      </div>
+      
+      <a class="offer-header-btn" href="https://somethinginc.com/book">Book the call →</a>
+      
+    </div>
+    <div class="offer-body">
+      <h3>Alex, ready to fix Acme Co.&#39;s sending setup?</h3>
+      <p>This audit shows what needs to happen — the call is where we plan the rebuild for Acme Co. together. Bring this page; we&#39;ll walk through every finding and leave with a sequenced fix.</p>
+      <a class="offer-btn" href="https://somethinginc.com/book">Book the call</a>
+      
+      <p class="offer-scroll-hint">Then keep reading — the full breakdown is below.</p>
+      
+    </div>
+  </div>
+
+  
+
+  
+
+
+<div class="pull-quote">Deliverability is intact but two structural risks limit Acme Co.&#39;s ceiling.</div>
+
+  <div class="drop-cap-wrapper"><p>Three findings are blocking sustained scale past ~8K sends/day. None are urgent. All are fixable in a focused two-week sprint.</p></div>
+
+
+
+
+
+
+
+<div class="stat-strip">
+  
+  <div class="stat-strip-item" style="--idx: 0;">
+    <div class="num">3</div>
+    <div class="lbl">Findings</div>
+    <div class="note">1 high · 1 medium · 1 low</div>
+  </div>
+  
+  <div class="stat-strip-item" style="--idx: 1;">
+    <div class="num">10-14</div>
+    <div class="lbl">Days to remediate</div>
+    <div class="note">two-week sprint</div>
+  </div>
+  
+  <div class="stat-strip-item" style="--idx: 2;">
+    <div class="num">+6-9<span class="unit">pp</span></div>
+    <div class="lbl">Inbox-placement upside</div>
+    <div class="note">if all three fixed</div>
+  </div>
+  
+  <div class="stat-strip-item" style="--idx: 3;">
+    <div class="num">~8K</div>
+    <div class="lbl">Sends/day ceiling now</div>
+    <div class="note">vs ~25K post-fix</div>
+  </div>
+  
+</div>
+
+
+
+
+
+
+<div class="chart-block">
+  <div class="chart-title">Severity distribution</div>
+  <div class="chart-subtitle">Where the risk is concentrated across the 12-point audit framework</div>
+  <div class="chart-bars">
+  
+  <div class="chart-bar-row" style="--idx: 0;">
+    <div class="name">High severity</div>
+    <div class="bar-track"><div class="bar-fill" style="--target-w: 11.1%;"></div></div>
+    <div class="val">1 finding</div>
+  </div>
+  
+  <div class="chart-bar-row" style="--idx: 1;">
+    <div class="name">Medium severity</div>
+    <div class="bar-track"><div class="bar-fill" style="--target-w: 11.1%;"></div></div>
+    <div class="val">1 finding</div>
+  </div>
+  
+  <div class="chart-bar-row alt" style="--idx: 2;">
+    <div class="name">Low severity</div>
+    <div class="bar-track"><div class="bar-fill" style="--target-w: 11.1%;"></div></div>
+    <div class="val">1 finding</div>
+  </div>
+  
+  <div class="chart-bar-row alt" style="--idx: 3;">
+    <div class="name">Passed checks</div>
+    <div class="bar-track"><div class="bar-fill" style="--target-w: 100.0%;"></div></div>
+    <div class="val">9 checks</div>
+  </div>
+  
+  </div>
+</div>
+
+
+
+
+<h2>Scorecard</h2>
+<div class="capabilities">
+  
+  <div class="cap-item" style="--idx: 0;">
+    <div class="cap-label">Domain reputation</div>
+    <div class="cap-value">B+</div>
+    <div class="cap-desc">no recent blacklist hits</div>
+  </div>
+  
+  <div class="cap-item" style="--idx: 1;">
+    <div class="cap-label">Send concentration</div>
+    <div class="cap-value">High</div>
+    <div class="cap-desc">78% from one IP block</div>
+  </div>
+  
+  <div class="cap-item" style="--idx: 2;">
+    <div class="cap-label">Authentication</div>
+    <div class="cap-value">Partial</div>
+    <div class="cap-desc">DMARC at p=none</div>
+  </div>
+  
+</div>
+
+
+
+
+
+
+<div class="chart-block">
+  <div class="chart-title">Findings by category</div>
+  <div class="chart-subtitle">Where the structural risk sits in Acme Co.&#39;s stack</div>
+  <div class="donut-row">
+    
+    <svg viewBox="0 0 36 36" width="200" height="200" class="donut-svg" style="display:block;">
+      <circle cx="18" cy="18" r="15.91549431" fill="none" stroke="var(--surface-2)" stroke-width="3.4" pointer-events="none"/>
+      
+      
+        
+        <circle cx="18" cy="18" r="15.91549431" fill="none"
+          stroke="var(--accent)"
+          stroke-width="3.4"
+          stroke-dasharray="8.333 91.667"
+          stroke-dashoffset="0"
+          stroke-linecap="butt"
+          pointer-events="stroke"
+          transform="rotate(-90 18 18)"
+          class="donut-slice"
+          style="animation-delay: 0.0s;">
+          <title>Send infrastructure: 8.333%</title>
+        </circle>
+        
+      
+        
+        <circle cx="18" cy="18" r="15.91549431" fill="none"
+          stroke="#9333EA"
+          stroke-width="3.4"
+          stroke-dasharray="8.333 91.667"
+          stroke-dashoffset="-8.333"
+          stroke-linecap="butt"
+          pointer-events="stroke"
+          transform="rotate(-90 18 18)"
+          class="donut-slice"
+          style="animation-delay: 0.12s;">
+          <title>Authentication: 8.333%</title>
+        </circle>
+        
+      
+        
+        <circle cx="18" cy="18" r="15.91549431" fill="none"
+          stroke="#0EA5E9"
+          stroke-width="3.4"
+          stroke-dasharray="8.333 91.667"
+          stroke-dashoffset="-16.666"
+          stroke-linecap="butt"
+          pointer-events="stroke"
+          transform="rotate(-90 18 18)"
+          class="donut-slice"
+          style="animation-delay: 0.24s;">
+          <title>Content / copy: 8.333%</title>
+        </circle>
+        
+      
+        
+        <circle cx="18" cy="18" r="15.91549431" fill="none"
+          stroke="#F59E0B"
+          stroke-width="3.4"
+          stroke-dasharray="75.0 25.0"
+          stroke-dashoffset="-24.999000000000002"
+          stroke-linecap="butt"
+          pointer-events="stroke"
+          transform="rotate(-90 18 18)"
+          class="donut-slice"
+          style="animation-delay: 0.36s;">
+          <title>Checks passed: 75.0%</title>
+        </circle>
+        
+      
+      <text x="18" y="19.5" text-anchor="middle" font-size="6.5" font-weight="800" fill="#41220B" font-family="-apple-system, system-ui, sans-serif" class="donut-total" pointer-events="none">12</text>
+      <text x="18" y="24" text-anchor="middle" font-size="2.4" fill="#41220B" font-family="-apple-system, system-ui, sans-serif" opacity="0.55" letter-spacing="0.4" class="donut-label" pointer-events="none">TOTAL</text>
+    </svg>
+    <div class="donut-legend">
+      
+      
+      
+      <div class="donut-legend-item" style="--idx: 0;">
+        <div class="donut-legend-swatch" style="background: var(--accent);"></div>
+        <div class="donut-legend-name">Send infrastructure <span style="color: var(--text-dim); font-weight: 400;">— IP concentration</span></div>
+        <div class="donut-legend-val">1 finding <span class="donut-legend-pct">8.3%</span></div>
+      </div>
+      
+      
+      <div class="donut-legend-item" style="--idx: 1;">
+        <div class="donut-legend-swatch" style="background: #9333EA;"></div>
+        <div class="donut-legend-name">Authentication <span style="color: var(--text-dim); font-weight: 400;">— DMARC enforcement</span></div>
+        <div class="donut-legend-val">1 finding <span class="donut-legend-pct">8.3%</span></div>
+      </div>
+      
+      
+      <div class="donut-legend-item" style="--idx: 2;">
+        <div class="donut-legend-swatch" style="background: #0EA5E9;"></div>
+        <div class="donut-legend-name">Content / copy <span style="color: var(--text-dim); font-weight: 400;">— reply-rate gap</span></div>
+        <div class="donut-legend-val">1 finding <span class="donut-legend-pct">8.3%</span></div>
+      </div>
+      
+      
+      <div class="donut-legend-item" style="--idx: 3;">
+        <div class="donut-legend-swatch" style="background: #F59E0B;"></div>
+        <div class="donut-legend-name">Checks passed <span style="color: var(--text-dim); font-weight: 400;">— no action needed</span></div>
+        <div class="donut-legend-val">9 of 12 <span class="donut-legend-pct">75.0%</span></div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+
+<h2>Findings</h2>
+
+
+<h3><span class="num">01</span> DMARC policy at p=none caps reputation upside</h3>
+
+<div class="example-block">
+  <div class="badges">
+    <span class="pill warning">medium</span>
+    <span class="pill">Authentication</span>
+  </div>
+  <p>Your DMARC record is published but enforcement is set to p=none. Mailbox providers downweight senders without enforcement, especially under heavy cold volume.</p>
+  <div class="evidence">v=DMARC1; p=none; rua=mailto:dmarc@acme.com</div>
+  
+  <div class="callout" style="margin: 14px 0 0;">
+    <div class="callout-label">Recommendation</div>
+    <p>Move to p=quarantine after 2 weeks of clean RUF/RUA reports. Targets a 6-9pp lift in inbox placement at Outlook.</p>
+  </div>
+  
+</div>
+
+
+<h3><span class="num">02</span> Single-IP concentration creates a single point of failure</h3>
+
+<div class="example-block">
+  <div class="badges">
+    <span class="pill danger">high</span>
+    <span class="pill">Send infrastructure</span>
+  </div>
+  <p>78% of your outbound volume originates from one IP block. One spam trap hit could throttle the entire campaign.</p>
+  
+  
+  <div class="callout" style="margin: 14px 0 0;">
+    <div class="callout-label">Recommendation</div>
+    <p>Split sending across 3-5 mailbox providers or add a secondary IP pool warmed in parallel.</p>
+  </div>
+  
+</div>
+
+
+<h3><span class="num">03</span> Reply rate is low for your spam-trigger profile</h3>
+
+<div class="example-block">
+  <div class="badges">
+    <span class="pill success">low</span>
+    <span class="pill">Content</span>
+  </div>
+  <p>No banned phrases detected in your last 1,000 sends. Reply rate of 1.4% trails category median (2.1%), but the gap is content, not deliverability.</p>
+  
+  
+  <div class="callout" style="margin: 14px 0 0;">
+    <div class="callout-label">Recommendation</div>
+    <p>Review opening line variance and CTA framing. Deliverability is not the bottleneck here.</p>
+  </div>
+  
+</div>
+
+
+
+
+<hr>
+<h2>Methodology</h2>
+<p>Findings derived from public DNS records, MX lookups, and a 30-day send-pattern analysis. No access to your ESP was used.</p>
+
+
+
+
+  
+
+  
+  
+  <div class="offer">
+    <div class="offer-header">
+      <div class="offer-logo-mark">
+        <img src="data:image/webp;base64,UklGRkoQAABXRUJQVlA4ID4QAADQRQCdASq0ALQAPm0ylUckIyIhKBObGIANiWdu4XVRHuhOzPm7jc7AxtIG8u9RBvFvk16pN5V/qf4neCX+f/qfkf+HfJ/4v+q/sTyy+lvND+M/cv8d+Zf9Y9re9n4D6gv4r/Gf7F+Pv9e/cD2j9nNmX+K9AL2Y+j/6L+6/2f9nPjZ65ehfzM+4B+sHFXUAv0//wPZJ/lf/n/gP876Kf0H/C/+f/C/AF/Of61/x/8R+UPzG//////Aj9uv//7rn7l////zG0l6NqiaByETic0w3J7hzufIOvq6/4wnfQSaCjPjJYDE1+U/dpGIQ53Coge/OIBOt32UV8se3kV7SAV5sqvlDSKEO9Y7L3SkUo/oDEun8I1iUtmTCjMuQtjq4D+bH/f/rRYLn3f2hIkZYzuBY/u/mtAHRexBnNOvtjZ/vn8JtIdGxU8ZhNWrak7xQGtnTvrucxEaa0CVIo4GHkzhFd4r1KwAIWGDrBtuGca0CIplU93G6XcVvvfrHMOVIY/9IzLffYN+5cqfkr/9YyfDuePJF6MxCHDYHe/5MqyR4OWWw+k/RDYzAZVx3n0MJZjjTvAFlweCgXBm26x9fGZGN5bQjX82j01MLGJUTHoJrBiiBsbS6ocORt8PwVn3J3CODZlaDmftpkv96BJjYix+9WPFuqLjGwExlp7I/QEOIWh6mi+5/CXlH+aBvUagyDRMoSKuQqYn0MSc1f/yi7h65QhnUcdyhsUyWPNsH2NIdKMUAMnuHNAAA/v+/QddB2GtReiJnAL6FTLV5/l7qnrqyAbN9r4qaFZBLujuRDy7pO2GGDt5sNG0LgC1oE+TSgOeBlCNzZS3idH/zyyw2BN0eppmTXuF4F8QiX4LAJ+vTW4nHpO0oVWdxVV9OqHPrO+kCxcVjcF3KDGIRjBGQ3DOpklipWhuCuAgN9BaqAglzTtmaQnf6Bf3Yq7vFy3kca6k7XKCY0twuxffmJAZbK/E188/EFQRvH8ez2AnEFOmgxINCHX1EGbhjNL+7hEHqiFYjaFtWMHo57T5COKfkoXZLloUMV5r7t3XOMeg0/yrc3U25acipaLBxtcWsfzsr63U/sZTsCFljryHhOH4t1knhErPiR6S4kcJs6JGTczWBrdKT4UbbGyfpaFRBEVhjYqX1kJOCF7wsH+f5BzanI1nW5w56X/zuXxrvx5hEPF1+KS6YTNefL5x4nailHueNK9HBvoSyQ6Y2xeYcsGpMQx8WIvDqqI8/un0xPeJsySuS0r0l2zd5JNUN1zGlPbUjgopifs0U9a3syb7jsWXupq5iiH0i1DmhQDI6yrYWU1m5LzgchfrTKmtfpl/CaCDqx/T4vyOjJLcrh+2KEwz0R2vqS5fxkJ0ptHgPwBC2vZvwuMWeEcI5OCX/u+HFNVMmPG/onYCsbQrEtzpxTZmglrjNJxFypYOzEak+WFMf0+IlRPLRbWK4TcJgzDkVdzMINezmTBBFZ/OaS+lnIQ5Hzc+a4hFX58VueEaW6lsKlHCAowB73ZVUldZhn4nWMeQxzzwVHGWBo4Jtzw1muwpYtrfJErOk0vCICqKIVTJyJkqxjNTyFi+0KVaw7gd15cwPWGYIXdrsmImecbnlrnkphmcxBcCPd3TWixbdDUa0iaYpERw6tVMrx9KjOMJhMKjABTRHxfkRCYCcfHFK0Wm0OUQE24CfsBPOFrutr9JOawdS/Ue7z/3+/SVUGKDGIm2Fg2yjcKbLxTgBnl8SQGEl0EliEdNZr99sAh/auBrIz+c7xskxF66g+vxhpSWRUqilrsKYyE36u8KPtTiOGi95PPr7Z+36WoD8gc2DQ6gOiefKQFNte1eJ0US5PES19n2Q+DmNM8h/ZnPx+yivtU7NmetSu41Q1bkf5xLtCD8l/YYl7FE3pXFSQthHlgxbRDNGQRlKoHBwrejCLFccCEoqmrqr5qwPw1WMwTMIB7+4NqojLUBT9jtXWp4GJ75nugnPY0gf79mze9TXQHasmCPYHQw8CB6q5jAswLUpCPq/XG363ZLsUmESpmMNV3/drm2B60njeV6nXLgjMa9yOgS1IjvGanvNe0l8iaT4+V/Ff4S/Yh4KhcarQTpiLcIb7Y2dTnasw/Ehw4zHkJwJu4Ddv3//hoAwySLcRzMB9+Yso6kr1XmZIfyibwlGat5/yTP4l9HH8k1YiTAmzKuC8wqITDmmBGGSi2IQtQuSMXGDiS8MB0r8bwQe3yblRLHmEA1upswECW5uD+JoQzpi+o65iMPw6nPEbO86Oh/c3JDUgyLhMHKp3D9UBeUieH35hMnltq4Rxft6B/m46Q+b9iJRJlPOMBAnfe0GF5lALpUvPPPYDCcLSBPF/Cpnolnj9ZkKv+vNfeRcUdqK6rw4FWQfDqgltSq1hpmI0tFxaoCWQBTUvtt+/MqMoNJch2qto7eDp+8T40qSXO/S5xJY4wMvXO2ukCjziC6xAwmfYW2NHyid1kPS1Et5I7DvMa2t/QG0zQa+bsEnHt6xDUT+ViAW5PukYDe1WBIpfu0rDW9tzlm4+M2jRQdRHcWgIx4cGlu4EX3YDFKYt7+vhOIfZ9MHtZYWzk7lwgcXanj6sEntXzqRyszjFSM9k4TgjW5+StYT5RA4X4Elj/U084l8zkwkZSqtmEGEG7eGhG4xXb+oIEme0ClucpJT9Tv3l8uljHXbMXIuo+JLExIBq6guuIu9bOSCelnf8IsBOujZwQTkVA6tZmUWiQN282o7CRT25J+TT4ffCfxoSpldlXYbSf93L820aIx2TUTVJSELNNz6fPvZhP1MqskcD+OyCqR5GNvOF/dP+EO8brKSFuLZ+1rStaX/vww1xMX95OpHD1btPbxncEK2mTzpLP2CoIZxmoQbSLdxe9iRBlDJhoS8Q7kP17WZlbShLiDRy6943uoFjZoeQiNsoJ3MzzzAuWLUXyBc+Y0csYCA30Fd5f5nff6CNO/P6NfAq0+j5Qo+rSrLVqDEobU4lLQSB+4weUyebcNCzqXN6qdqyNARfIl0U92QC1c9n4FqNgKSYK7Ofxc0IUurBFRdNPrcLyFovgOVa74g+qQ8pXfXyLxlK+fI6bqnvLH8IWB2i0suL4VoV/E7it3PK1EXUMGmWZxJWyzc77YCXcf0yeZJ1EvWCkAFLfLb5Fp3nRb6gJA932stI4/t0It23InTSC1bytU94JO3KF2j27nVpLTq2ZYgRO0hs7++SmePf4wtNky1aH8SqMPfwx0lij82dnAgIsQ/HnRfmKFF9+kLyR0TAjJImijp4q2fHspTAH0xA5MBETTizG1BbNbZT83s8VKuw50nEjKZznO7Gv+2FMVMpHAt/xL8rf/a5et/robssPOkuQkz/g35nTtP8DSb4Dc7nHeQqQ5jTfGDV9B5nM+jXIApJXEb9FSbp0BNdl1mxt4sWsgrqLBe4qdz4g4zJbJV2j8Qk91S36qegR204qYppg/UradxF8PESnyCLkt5KbHeOAqRAbs9Xfbpo/Qkwch7WHrMnzv7ZdiZ0GpX6V3voXn90uHfa1BU65WkShHgEvTsUTzaLvaBtabBDUr+wscUjCFoGPf2wB1fPl/8LzgHaHSmVhE8OFyfl+GC5avTuPTti5uvqMD6GWFpaBHZa04V/yE5lsDpb9KrA98Bl6f4XlumE/wLTxq12xEXAk7STxDwpoeTHSghqEskoyMQJcW3N7K8Qi0SE4zRDVJh7b9VGHHjK9o7XxbJ4JIyVkaPJrAWxnSGgtOh/vmhJ5mrjy55wyoKmpVxbLBRXDQ2zyHXz42zgJBznIHrmWT6AJm7/wYYU/giCX7DHnjMFv//xMf6iAa/4kdp94n95LvQWz4UAYkKDlXSXAB/q6xxx/zDWN9bzQA/08wiQ066uAa9myGqBEJEihhRczthecwKXIi92s3C2FtX+jXKiH5+9PufcNuNK2/H1/+BT5qNKWCFHo9nU6pPVg//F+niUjLxRcZ3ZJIW0NwFlS1DWPNcAgACRId9Pj8ew6LSMidzjh1/lpz1NLa5ESxzPHZAaXNd1uTVBiqochL95jA0QQlduVzVbS23a+Fl0W/5Vfkltmv6DEBF5QlzzdrMzAGMdvpXxQrEo+bKupTw+DgwgPv0clIZIdHVOUpwPAbTwbGOMiWCkSp3jQrh9rtbmYBpK11uJ8LJRdzgc+6pL9ewWVOeIzeOrQKIlu+jXH/buLzbLVmVvVwTRKO9BjuGVEE8MTlwuvNSr/Fdc15F8e0/uC/SRxo87UrDB//RYbF9P0711OWs60aLc8E0hSq5g6MNp4+P3vK/I/JtEmItRY1veMPYEGFyQqjUt2pCjbhrLOkjrRTf3t4TPJ/enq3mDEE9t/EZyYQoChrOtNjefZq4XG+GlXNkSjl2lF8aWAmIhOthckLlyZIdE99FVD2YyJ2solfi+1at+mGWm/1B2hdq7DoF/ThxUNJB1co2IYg7cFECqeRd8MAt6kuAnIl/kjdvx/p/nXNbmbWS+7ggc9hM5nwpyrw3/X7H308y9rOMYhIP+9wjuGP+VZ6mAvKN0Nkl+hKApiNfHkfXUqyDd5knv4ydS5BjsIa5Dj3a6U+CuF+gtLwFPZSovaoyD+1nZjvIPZdaJDUQAmrX6zPvE/z75Hz5aY0U7wsfB0mPrE1qkqlwjNFEkYNHMYCBig5hei3Ecs89IrpF1iFSCNintS9xkcFKX2vO4mXx8ydBLxg7NuSTTVOXlFjYZ+CzEUitKEL4kTIL+rcNg4siqvwCPtt8nRzntddIhuv+Jsay8GgvexTmFTu1/zXY2rveJOlAqpGKtaTGsVWk/gfISI+v3odpcyxWHDJZfAkhVcnPoeyuEjbP1Ix8/1AA1Q3QyglJY3Lz6qJj2RU5c9nQkuc0O7wBOdi78PUJSGJre8G0SdSkMUgDiYftURKVy1IXms4Rk7J8w3L0LMaTVZgPQhb0fA860CEw3qHYbM3jzp6nX6A2U+cNXwzlQvUqX5Lx/5xzhCkZdAXJqUqKtho6wzuCDiWmqhuAsLD6u6vzUAE39YB6LDTOh0re56iTjWmuOP5e59CQpbLz0qDcIXZ6zXDp0viBfCs8jdEOR6z54g/MGBKhyp52b1HSRIZez3QVFtwSAg2uKGqjwjF4nfnLvuF/nrFSAdQsg8Gqfp3Sflh/J7AsyXcBGoIXLvxxtR2ntG9UalL5IrVyD2oobxcuYNFf42ABDyTjmG/E52SjPvLUf44/bTkC6TGqffD8qREoKIeUmSyN2gZ8NzIhpr/onpvQiS8huqoQn7x8FRn/cj51rgTE6lF/1DTlLzHvULji9GAxawuW6y+6hRJSckwPnlfIMufw1qyxTF93JuqtMcEI8d35rDWjSlBwP9D/uSJCLXssLjkPw6CcQROn+mX3cMMRSxOdSqs3i70bYhbQ92qQVWlJLklsTqX+1BGyON7x8vaHvY0NFsArYEBRzuXWqearp1sJG/bTLyqMHflXQOnGZTZPHW2hv8AOL8WeH4K3EoHK00Jjv5LAB0gujMH6OfXtXwkMtapIpUgoGbvWyQQn0AAAAAA=" alt="">
+        
+      </div>
+      <div>
+        <div class="offer-header-name">Something Inc.</div>
+        <div class="offer-header-sub">Outbound infrastructure and pre-demonstration deliverables for B2B GTM teams.</div>
+      </div>
+      
+    </div>
+    <div class="offer-body">
+      <h3>Alex, ready to fix Acme Co.&#39;s sending setup?</h3>
+      <p>This audit shows what needs to happen — the call is where we plan the rebuild for Acme Co. together. Bring this page; we&#39;ll walk through every finding and leave with a sequenced fix.</p>
+      <a class="offer-btn" href="https://somethinginc.com/book">Book the call</a>
+      
+    </div>
+  </div>
+
+  
+</main>
+
+<footer class="footer">
+  <div>Prepared by Something Inc. · <a href="https://somethinginc.com" style="color: var(--text-muted);">Something Inc.</a></div>
+  <div>May 2026</div>
+</footer>
+
+<script>
+(function(){
+  const bar = document.getElementById('readingBar');
+  if (!bar) return;
+  function update() {
+    const h = document.documentElement;
+    const scrolled = h.scrollTop || document.body.scrollTop;
+    const height = (h.scrollHeight || document.body.scrollHeight) - h.clientHeight;
+    const pct = height > 0 ? (scrolled / height) * 100 : 0;
+    bar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+</script>
+
+</body>
+</html>
